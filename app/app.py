@@ -94,6 +94,18 @@ def health():
         }
     )
 
+@app.route("/cart")
+def cart():
+    recommended_products = [
+        product
+        for product in PRODUCTS
+        if product["available"]
+    ][:3]
+
+    return render_template(
+        "cart.html",
+        recommended_products=recommended_products,
+    )
 
 if __name__ == "__main__":
     app.run(
