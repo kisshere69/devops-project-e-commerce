@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}
+Roast & Co. | Cart
+{% endblock %}
+
+{% block content %}
+
+<section class="cart-section">
+    <div class="container">
+
+        <div class="section-header">
+            <div>
+                <h2>
+                    Your Cart
+                </h2>
+            </div>
+        </div>
+
+        <div class="cart-empty">
+
+            <h2>
+                Your cart is empty.
+            </h2>
+
+            <p>
+                Add some coffee, pastries or desserts
+                to start your order.
+            </p>
+
+        </div>
+
+        <div class="cart-recommendations">
+
+            <div class="recommendations-header">
+                <span class="section-label">
+                    You might also like
+                </span>
+
+                <h2>
+                    Recommended for you
+                </h2>
+            </div>
+            <div class="recommendation-grid">
+
+                    {% for product in recommended_products %}
+
+                    <article class="recommendation-card">
+
+                        <div class="recommendation-image">
+                            <img
+                                src="{{ url_for('static', filename=product.image) }}"
+                                alt="{{ product.name }}"
+                            >
+                        </div>
+
+                        <div class="recommendation-content">
+
+                            <span class="category">
+                                {{ product.category }}
+                            </span>
+
+                            <h3>
+                                {{ product.name }}
+                            </h3>
+
+                            <div class="recommendation-footer">
+
+                                <span class="price">
+                                    €{{ "%.2f"|format(product.price) }}
+                                </span>
+
+                                <button
+                                    class="add-button"
+                                    type="button"
+                                    data-product-id="{{ product.id }}"
+                                >
+                                    Add to order
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
