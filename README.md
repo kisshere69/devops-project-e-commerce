@@ -14,10 +14,14 @@ app/
 ├── templates/
 │   ├── base.html
 │   └── index.html
+│
 ├── static/
 │   ├── css/
-│   └── style.css
-│   └── images/
+│   │   └── style.css
+│   │   └── images/
+│   │
+│   └── js/
+│       └──navigation.js
 │
 ├── .gitignore
 └── README.md
