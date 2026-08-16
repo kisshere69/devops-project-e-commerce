@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16.15-alpine
+
+    container_name: roast-co-postgres
+
+    environment:
+      POSTGRES_DB: coffee_shop
+      POSTGRES_USER: coffee
+      POSTGRES_PASSWORD: coffee
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coffee -d coffee_shop"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
