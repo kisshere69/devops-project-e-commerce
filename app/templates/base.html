@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+        Roast & Co.
+        {% endblock %}
+    </title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container navigation">
+
+        <a href="/" class="logo">
+            Roast & Co.
+        </a>
+
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="#menu">Menu</a>
+            <a href="#about">About</a>
+        </nav>
+
+        <button class="order-button">
+            Order
+            <span class="order-count">0</span>
+        </button>
+
+    </div>
+</header>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p>
+            © 2026 Roast & Co.
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>

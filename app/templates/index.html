@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}
+Welcome!
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="container hero-content">
+
+        <span class="hero-label">
+            Freshly brewed every day
+        </span>
+
+        <h1>
+            Coffee worth slowing down for.
+        </h1>
+
+        <p>
+            Fresh coffee, pastries and desserts
+            prepared every day.
+        </p>
+
+        <a href="#menu" class="primary-button">
+            Explore menu
+        </a>
+
+    </div>
+</section>
+
+
+<section id="menu" class="menu-section">
+
+    <div class="container">
+
+        <div class="section-header">
+            <div>
+                <span class="section-label">
+                    Our selection
+                </span>
+
+                <h2>
+                    Menu
+                </h2>
+            </div>
+
+            <p>
+                {{ products | length }} items
+            </p>
+        </div>
+
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+            <article class="product-card">
+
+                <div class="product-image">
+                    <img
+                        src="{{ url_for('static', filename=product.image) }}"
+                        alt="{{ product.name }}"
+                    >
+                </div>
+
+                <div class="product-content">
+
+                    <div class="product-meta">
+
+                        <span class="category">
+                            {{ product.category }}
+                        </span>
+
+                        {% if product.available %}
+
+                        <span class="available">
+                            Available
+                        </span>
+
+                        {% else %}
+
+                        <span class="unavailable">
+                            Sold out
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <h3>
+                        {{ product.name }}
+                    </h3>
+
+
+                    <p class="product-description">
+                        {{ product.description }}
+                    </p>
+
+
+                    <div class="product-footer">
+
+                        <span class="price">
+                            €{{ "%.2f"|format(product.price) }}
+                        </span>
+
+
+                        {% if product.available %}
+
+                        <button
+                            class="add-button"
+                            type="button"
+                            data-product-id="{{ product.id }}"
+                        >
+                            Add to order
+                        </button>
+
+                        {% else %}
+
+                        <button
+                            class="add-button"
+                            type="button"
+                            disabled
+                        >
+                            Sold out
+                        </button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section id="about" class="about-section">
+
+    <div class="container about-content">
+
+        <div>
+            <span class="section-label">
+                Roast & Co.
+            </span>
+
+            <h2>
+                Simple coffee. Good food.
+            </h2>
+        </div>
+
+        <p>
+            A small neighbourhood coffee shop
+            serving freshly brewed coffee,
+            pastries and desserts every day.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
