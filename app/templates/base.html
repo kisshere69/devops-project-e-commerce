@@ -18,6 +18,12 @@
     href="{{ url_for('static', filename='css/style.css') }}"
     >
 
+    <link
+    rel="icon"
+    type="image/png"
+    href="{{ url_for('static', filename='images/tab logo.png') }}"
+    >
+
 </head>
 
 <body>
@@ -25,20 +31,65 @@
 <header class="site-header">
     <div class="container navigation">
 
-        <a href="/" class="logo">
-            Roast & Co.
+        <!-- LEFT: Menu -->
+        <div class="menu-wrapper">
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+            >
+                <img
+                    src="{{ url_for('static', filename='images/menu dropdown.png') }}"
+                    alt=""
+                    class="menu-toggle-icon"
+                >
+            </button>
+
+            <nav
+                class="dropdown-menu"
+                id="dropdownMenu"
+            >
+                <a href="/" class="dropdown-item">
+                    Home
+                </a>
+
+                <a href="/#menu" class="dropdown-item">
+                    Menu
+                </a>
+
+                <a href="/#about" class="dropdown-item">
+                    About
+                </a>
+            </nav>
+
+        </div>
+
+
+        <!-- CENTER: Company logo -->
+        <a href="/" class="brand-logo">
+            <img
+                src="{{ url_for('static', filename='images/company logo.png') }}"
+                alt="Roast & Co."
+                class="brand-logo-image"
+            >
         </a>
 
-        <nav class="nav-links">
-            <a href="/">Home</a>
-            <a href="#menu">Menu</a>
-            <a href="#about">About</a>
-        </nav>
 
-        <button class="order-button">
-            Order
-            <span class="order-count">0</span>
-        </button>
+        <!-- RIGHT: Cart -->
+        <a
+            href="/cart"
+            class="cart-link"
+            aria-label="Open cart"
+        >
+            <img
+                src="{{ url_for('static', filename='images/cart.png') }}"
+                alt=""
+                class="cart-icon"
+            >
+        </a>
 
     </div>
 </header>
@@ -55,6 +106,10 @@
         </p>
     </div>
 </footer>
+
+<script
+    src="{{ url_for('static', filename='js/navigation.js') }}"
+></script>
 
 </body>
 </html>
