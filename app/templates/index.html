@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Welcome!
+Welcome to Roast & Co.!
 {% endblock %}
 
 {% block content %}
@@ -21,10 +21,6 @@ Welcome!
             Fresh coffee, pastries and desserts
             prepared every day.
         </p>
-
-        <a href="#menu" class="primary-button">
-            Explore menu
-        </a>
 
     </div>
 </section>
@@ -147,20 +143,37 @@ Welcome!
 
     <div class="container about-content">
 
-        <div>
+        <div class="about-brand">
+
             <span class="section-label">
                 Roast & Co.
             </span>
 
             <h2>
-                Simple coffee. Good food.
+                Brewed with care. Baked for the moment.
             </h2>
+
+            <img
+                src="{{ url_for('static', filename='images/company logo.png') }}"
+                alt="Roast & Co."
+                class="about-logo"
+            >
+
         </div>
 
         <p>
-            A small neighbourhood coffee shop
-            serving freshly brewed coffee,
-            pastries and desserts every day.
+            Roast & Co. originated as a modest weekend coffee
+            stand established by two friends who shared a
+            fundamental belief: high-quality coffee should
+            be personal, unhurried, and consistent.Initially
+            offering a limited selection of espresso beverages
+            and homemade pastries, the venture gradually evolved
+            into a neighborhood coffee shop dedicated to quality
+            ingredients, exceptional service, and the cultivation
+            of everyday rituals. Today, Roast & Co. provides meticulously
+            prepared coffee, freshly baked pastries, and desserts
+            while preserving the relaxed atmosphere that is foundational
+            to its identity.
         </p>
 
     </div>
