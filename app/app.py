@@ -1,6 +1,16 @@
+import os, psycopg
+
 from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
+
+def get_db_connection():
+    return psycopg.connect(DATABASE_URL)
+
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://coffee:coffee@localhost:5432/coffee_shop",
+)
 
 PRODUCTS = [
     {
@@ -106,6 +116,31 @@ def cart():
         "cart.html",
         recommended_products=recommended_products,
     )
+
+@app.route("/health/db")
+def database_health():
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1;")
+                result = cursor.fetchone()
+
+        return jsonify(
+            {
+                "status": "healthy",
+                "database": "reachable",
+                "result": result[0],
+            }
+        )
+
+    except Exception as error:
+        return jsonify(
+            {
+                "status": "unhealthy",
+                "database": "unreachable",
+                "error": str(error),
+            }
+        ), 500
 
 if __name__ == "__main__":
     app.run(
