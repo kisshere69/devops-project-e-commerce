@@ -1,0 +1,12 @@
+LICENSE
+.vscode/
+.idea/
+.venv/
+venv/
+*.log
+__pycache__/
+*.py[cod]
+.env
+.env.*
+.DS_Store
+Thumbs.db
