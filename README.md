@@ -2,49 +2,69 @@
 
 ## Overview
 
-This **DevOps** project represents a lightweight e-commerce-style coffee shop app where users can browse coffee, pastries, and desserts, add items to an order, change quantities, remove products, complete a simulated checkout, and submit ratings.
+This **DevOps** project represents a containerized e-commerce-style coffee shop **Flask** app where users can browse products, add them to an order, change quantities, remove products, complete a simulated checkout, and submit ratings.
 
-## Project Architecture (initial)
+![alt text](image.png)
 
+
+## Project Architecture (Work in progress)
 ```
-app/
-├── app.py
-├── requirements.txt
-│
-├── templates/
-│   ├── base.html
-│   └── index.html
-│
-├── static/
-│   ├── css/
-│   │   └── style.css
-│   │   └── images/
+devops-project-e-commerce/
+├── app/
+│   ├── app.py
+│   ├── requirements.txt
 │   │
-│   └── js/
-│       └──navigation.js
+│   ├── repositories/              # planned
+│   │   └── product_repository.py
+│   │
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   ├── wishlist.html           # planned
+│   │   └── cart.html
+│   │
+│   └── static/
+│       ├── css/
+│       │   └── style.css
+│       ├── images/
+│       └── js/
+│           └── navigation.js
 │
+├── database/
+│   └── init.sql
+│
+├── Dockerfile                     # planned
+├── docker-compose.yaml
 ├── .gitignore
 └── README.md
 ```
 
 ## Endpoints
 
-- `/` — storefront
-- `/health` — application health check
+- `/` - storefront
+- `/health` - application health check
+- `/health/db` - database health check
 
-## Current architecture
+## Near-term Architecture
 
-```
+```text
 Browser
-↓
+   ↓
 Flask
-↓
-Jinja Templates
-↓
-Static Assets
+   ├── Jinja Templates
+   ├── Static Assets
+   │   ├── CSS
+   │   ├── JavaScript
+   │   └── Images
+   │
+   └── Product Repository
+          ↓
+       psycopg
+          ↓
+      PostgreSQL
+          ↓
+       products
 ```
-
-Product data is currently stored in memory inside the Flask application.
 
 ## Project status
 
