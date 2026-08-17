@@ -13,7 +13,7 @@ devops-project-e-commerce/
 │   ├── app.py
 │   ├── requirements.txt
 │   │
-│   ├── repositories/              # planned
+│   ├── repositories/
 │   │   └── product_repository.py
 │   │
 │   ├── templates/
