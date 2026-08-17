@@ -1,47 +1,11 @@
-import os, psycopg
-
 from flask import Flask, jsonify, render_template
-
-app = Flask(__name__)
-
-def get_db_connection():
-    return psycopg.connect(DATABASE_URL)
-
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://coffee:coffee@localhost:5432/coffee_shop",
+from database import get_db_connection
+from repositories.product_repository import (
+    get_product,
+    get_products,
 )
 
-def get_products():
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
-                SELECT *
-                FROM products
-                ORDER BY id;
-                """
-            )
-
-            rows = cursor.fetchall()
-
-    products = []
-
-    for row in rows:
-        products.append(
-            {
-                "id": row[0],
-                "name": row[1],
-                "category": row[2],
-                "price": row[3],
-                "description": row[4],
-                "available": row[5],
-                "image": row[6],
-            }
-        )
-
-    return products
-
+app = Flask(__name__)
 
 @app.route("/")
 def home():
@@ -60,6 +24,19 @@ def health():
             "status": "healthy",
         }
     )
+
+@app.route("/api/products/<int:product_id>")
+def product_api(product_id):
+    product = get_product(product_id)
+
+    if product is None:
+        return jsonify(
+            {
+                "error": "Product not found",
+            }
+        ), 404
+
+    return jsonify(product)
 
 @app.route("/cart")
 def cart():
