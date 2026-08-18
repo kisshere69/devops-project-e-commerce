@@ -92,3 +92,22 @@ VALUES
         'images/unavailable brownie.png'
     )
 ON CONFLICT (id) DO NOTHING;
+
+
+CREATE TABLE IF NOT EXISTS cart_items (
+    id SERIAL PRIMARY KEY,
+    cart_id VARCHAR(50) NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 1,
+
+    CONSTRAINT fk_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_cart_product
+        UNIQUE (cart_id, product_id),
+
+    CONSTRAINT positive_quantity
+        CHECK (quantity > 0)
+);
