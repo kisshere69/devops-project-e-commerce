@@ -17,6 +17,7 @@ from repositories.cart_repository import (
     get_cart_count,
     get_cart_items,
     get_cart_total,
+    clear_cart,
 )
 
 app = Flask(__name__)
@@ -35,15 +36,6 @@ def home():
         products=products,
     )
 
-
-@app.route("/health")
-def health():
-    return jsonify(
-        {
-            "status": "healthy",
-        }
-    )
-
 @app.route("/api/products/<int:product_id>")
 def product_api(product_id):
     product = get_product(product_id)
@@ -56,6 +48,8 @@ def product_api(product_id):
         ), 404
 
     return jsonify(product)
+
+# Cart
 
 @app.route("/cart")
 def cart():
@@ -133,6 +127,29 @@ def inject_cart_count():
     return {
         "cart_count": get_cart_count(cart_id),
     }
+
+@app.route(
+    "/cart/clear",
+    methods=["POST"],
+)
+def clear_cart_route():
+    cart_id = session.get("cart_id")
+
+    if cart_id is not None:
+        clear_cart(cart_id)
+
+    return redirect(url_for("cart"))
+
+
+# App health checks
+
+@app.route("/health")
+def health():
+    return jsonify(
+        {
+            "status": "healthy",
+        }
+    )
 
 @app.route("/health/db")
 def database_health():
