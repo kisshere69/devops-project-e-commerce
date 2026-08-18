@@ -44,12 +44,71 @@ Roast & Co. | Cart
                         </h3>
 
                         <div class="cart-item-price">
-                            €{{ "%.2f"|format(item.price) }}
+                            Price: €{{ "%.2f"|format(item.price) }}
                         </div>
 
+                        
                         <div class="cart-item-quantity">
                             Quantity: {{ item.quantity }}
                         </div>
+
+
+                        <div class="quantity-controls">
+
+                            <form
+                                action="{{ url_for(
+                                    'decrease_cart_product',
+                                    product_id=item.product_id
+                                ) }}"
+                                method="POST"
+                            >
+                                <button
+                                    class="quantity-button"
+                                    type="submit"
+                                >
+                                    −
+                                </button>
+                            </form>
+
+
+                            <span class="quantity-value">
+                                {{ item.quantity }}
+                            </span>
+
+
+                            <form
+                                action="{{ url_for(
+                                    'increase_cart_product',
+                                    product_id=item.product_id
+                                ) }}"
+                                method="POST"
+                            >
+                                <button
+                                    class="quantity-button"
+                                    type="submit"
+                                >
+                                    +
+                                </button>
+                            </form>
+
+                        </div>
+
+
+                        <form
+                            action="{{ url_for(
+                                'remove_cart_product',
+                                product_id=item.product_id
+                            ) }}"
+                            method="POST"
+                            class="remove-item-form"
+                        >
+                            <button
+                                class="remove-item-button"
+                                type="submit"
+                            >
+                                Remove
+                            </button>
+                        </form>
 
                     </div>
 
