@@ -82,13 +82,22 @@
         <a
             href="/cart"
             class="cart-link"
-            aria-label="Open cart"
         >
             <img
                 src="{{ url_for('static', filename='images/cart.png') }}"
                 alt=""
                 class="cart-icon"
             >
+
+            <span>
+                Cart
+            </span>
+
+            {% if cart_count > 0 %}
+                <span class="cart-count">
+                    {{ cart_count }}
+                </span>
+                {% endif %}
         </a>
 
     </div>
