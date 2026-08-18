@@ -15,6 +15,8 @@ from repositories.product_repository import get_product, get_products
 from repositories.cart_repository import (
     add_cart_item,
     get_cart_count,
+    get_cart_items,
+    get_cart_total,
 )
 
 app = Flask(__name__)
@@ -57,8 +59,17 @@ def product_api(product_id):
 
 @app.route("/cart")
 def cart():
+    cart_id = session.get("cart_id")
+
+    if cart_id is None:
+        cart_items = []
+        cart_total = 0
+    else:
+        cart_items = get_cart_items(cart_id)
+        cart_total = get_cart_total(cart_id)
+
     products = get_products()
-    
+
     recommended_products = [
         product
         for product in products
@@ -67,6 +78,8 @@ def cart():
 
     return render_template(
         "cart.html",
+        cart_items=cart_items,
+        cart_total=cart_total,
         recommended_products=recommended_products,
     )
 
