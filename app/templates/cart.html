@@ -17,77 +17,109 @@ Roast & Co. | Cart
             </div>
         </div>
 
-        <div class="cart-empty">
+        {% if cart_items %}
 
-            <h2>
-                Your cart is empty.
-            </h2>
+        <div class="cart-layout">
 
-            <p>
-                Add some coffee, pastries or desserts
-                to start your order.
-            </p>
+            <div class="cart-items">
 
-        </div>
+                {% for item in cart_items %}
 
-        <div class="cart-recommendations">
+                <article class="cart-item">
 
-            <div class="recommendations-header">
-                <span class="section-label">
-                    You might also like
-                </span>
+                    <img
+                        src="{{ url_for('static', filename=item.image) }}"
+                        alt="{{ item.name }}"
+                        class="cart-item-image"
+                    >
+
+                    <div class="cart-item-content">
+
+                        <span class="category">
+                            {{ item.category }}
+                        </span>
+
+                        <h3>
+                            {{ item.name }}
+                        </h3>
+
+                        <div class="cart-item-price">
+                            €{{ "%.2f"|format(item.price) }}
+                        </div>
+
+                        <div class="cart-item-quantity">
+                            Quantity: {{ item.quantity }}
+                        </div>
+
+                    </div>
+
+                    <div class="cart-item-subtotal">
+                        €{{ "%.2f"|format(item.subtotal) }}
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            </div>
+
+
+            <aside class="cart-summary">
 
                 <h2>
-                    Recommended for you
+                    Order Summary
                 </h2>
-            </div>
-            <div class="recommendation-grid">
 
-                    {% for product in recommended_products %}
+                <div class="cart-summary-row cart-summary-total">
 
-                    <article class="recommendation-card">
+                    <span>
+                        Total
+                    </span>
 
-                        <div class="recommendation-image">
-                            <img
-                                src="{{ url_for('static', filename=product.image) }}"
-                                alt="{{ product.name }}"
-                            >
-                        </div>
-
-                        <div class="recommendation-content">
-
-                            <span class="category">
-                                {{ product.category }}
-                            </span>
-
-                            <h3>
-                                {{ product.name }}
-                            </h3>
-
-                            <div class="recommendation-footer">
-
-                                <span class="price">
-                                    €{{ "%.2f"|format(product.price) }}
-                                </span>
-
-                                <button
-                                    class="add-button"
-                                    type="button"
-                                    data-product-id="{{ product.id }}"
-                                >
-                                    Add to order
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    {% endfor %}
+                    <span>
+                        €{{ "%.2f"|format(cart_total) }}
+                    </span>
 
                 </div>
+
+            </aside>
+
         </div>
+
+        {% else %}
+
+            <div class="cart-empty">
+
+                <h2>
+                    Your cart is empty.
+                </h2>
+
+                <p>
+                    Add some coffee, pastries or desserts
+                    to start your order.
+                </p>
+
+            </div>
+
+            <div class="cart-recommendations">
+
+                <div class="recommendations-header">
+
+                    <span class="section-label">
+                        You might also like
+                    </span>
+
+                    <h2>
+                        Recommended for you
+                    </h2>
+
+                </div>
+
+                <!-- твой текущий recommendation-grid -->
+
+            </div>
+
+        {% endif %}
 
     </div>
 </section>
