@@ -1,11 +1,27 @@
-from flask import Flask, jsonify, render_template
+import os, uuid
+
+from flask import (
+    Flask,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from database import get_db_connection
-from repositories.product_repository import (
-    get_product,
-    get_products,
+from repositories.product_repository import get_product, get_products
+from repositories.cart_repository import (
+    add_cart_item,
+    get_cart_count,
 )
 
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = os.getenv(
+    "SECRET_KEY",
+    "dev-secret-key"
+)
 
 @app.route("/")
 def home():
@@ -52,6 +68,39 @@ def cart():
         "cart.html",
         recommended_products=recommended_products,
     )
+
+
+def get_cart_id():
+    if "cart_id" not in session:
+        session["cart_id"] = str(uuid.uuid4())
+
+    return session["cart_id"]
+
+@app.route(
+    "/cart/add/<int:product_id>",
+    methods=["POST"],
+)
+
+def add_to_cart(product_id):
+    product = get_product(product_id)
+
+    if product is None:
+        return "Product not found", 404
+
+    if not product["available"]:
+        return "Product is unavailable", 400
+
+    cart_id = get_cart_id()
+
+    add_cart_item(
+        cart_id,
+        product_id,
+    )
+
+    return redirect(
+        request.referrer or url_for("home")
+    )
+
 
 @app.route("/health/db")
 def database_health():
