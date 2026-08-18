@@ -99,6 +99,65 @@
     </div>
 </header>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% for category, message in messages %}
+
+        {% if category == "cart" %}
+
+        <div
+            class="cart-banner"
+            id="cartBanner"
+        >
+
+            <button
+                class="cart-banner-close"
+                id="cartBannerClose"
+                type="button"
+                aria-label="Close notification"
+            >
+                ×
+            </button>
+
+            <div class="cart-banner-content">
+
+                <span class="cart-banner-label">
+                    Added to cart
+                </span>
+
+                <strong>
+                    {{ message }}
+                </strong>
+
+            </div>
+
+            <div class="cart-banner-actions">
+
+                <button
+                    class="cart-banner-secondary"
+                    id="cartBannerDismiss"
+                    type="button"
+                >
+                    Got it
+                </button>
+
+                <a
+                    href="{{ url_for('cart') }}"
+                    class="cart-banner-primary"
+                >
+                    Go to Cart
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endwith %}
+
 <main>
     {% block content %}
     {% endblock %}
