@@ -26,3 +26,37 @@ document.addEventListener("click", (event) => {
         );
     }
 });
+
+/* Cart banner logic */
+
+const cartBanner =
+    document.getElementById("cartBanner");
+
+const cartBannerClose =
+    document.getElementById("cartBannerClose");
+
+const cartBannerDismiss =
+    document.getElementById("cartBannerDismiss");
+
+
+function closeCartBanner() {
+    if (cartBanner) {
+        cartBanner.remove();
+    }
+}
+
+
+if (cartBannerClose) {
+    cartBannerClose.addEventListener(
+        "click",
+        closeCartBanner
+    );
+}
+
+
+if (cartBannerDismiss) {
+    cartBannerDismiss.addEventListener(
+        "click",
+        closeCartBanner
+    );
+}
