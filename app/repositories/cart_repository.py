@@ -163,3 +163,14 @@ def remove_cart_item(cart_id, product_id):
                     product_id,
                 ),
             )
+
+def clear_cart(cart_id):
+    with get_db_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                DELETE FROM cart_items
+                WHERE cart_id = %s;
+                """,
+                (cart_id,),
+            )
