@@ -18,6 +18,9 @@ from repositories.cart_repository import (
     get_cart_items,
     get_cart_total,
     clear_cart,
+    increase_cart_item,
+    decrease_cart_item,
+    remove_cart_item,
 )
 
 app = Flask(__name__)
@@ -140,6 +143,51 @@ def clear_cart_route():
 
     return redirect(url_for("cart"))
 
+@app.route(
+    "/cart/increase/<int:product_id>",
+    methods=["POST"],
+)
+def increase_cart_product(product_id):
+    cart_id = session.get("cart_id")
+
+    if cart_id is not None:
+        increase_cart_item(
+            cart_id,
+            product_id,
+        )
+
+    return redirect(url_for("cart"))
+
+
+@app.route(
+    "/cart/decrease/<int:product_id>",
+    methods=["POST"],
+)
+def decrease_cart_product(product_id):
+    cart_id = session.get("cart_id")
+
+    if cart_id is not None:
+        decrease_cart_item(
+            cart_id,
+            product_id,
+        )
+
+    return redirect(url_for("cart"))
+
+@app.route(
+    "/cart/remove/<int:product_id>",
+    methods=["POST"],
+)
+def remove_cart_product(product_id):
+    cart_id = session.get("cart_id")
+
+    if cart_id is not None:
+        remove_cart_item(
+            cart_id,
+            product_id,
+        )
+
+    return redirect(url_for("cart"))
 
 # App health checks
 
