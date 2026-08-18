@@ -102,6 +102,19 @@ def add_to_cart(product_id):
     )
 
 
+@app.context_processor
+def inject_cart_count():
+    cart_id = session.get("cart_id")
+
+    if cart_id is None:
+        return {
+            "cart_count": 0,
+        }
+
+    return {
+        "cart_count": get_cart_count(cart_id),
+    }
+
 @app.route("/health/db")
 def database_health():
     try:
