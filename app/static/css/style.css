@@ -1099,3 +1099,30 @@ button {
     }
 
 }
+
+.empty-cart-button {
+    width: 100%;
+
+    margin-top: 22px;
+    padding: 11px 16px;
+
+    border: 1px solid var(--danger);
+    border-radius: 9px;
+
+    background: transparent;
+    color: var(--danger);
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+    transition:
+        background 0.2s,
+        color 0.2s;
+}
+
+
+.empty-cart-button:hover {
+    background: var(--danger);
+    color: white;
+}
