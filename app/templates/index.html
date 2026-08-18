@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Welcome to Roast & Co.!
+Roast & Co. | Coffee paradise
 {% endblock %}
 
 {% block content %}
@@ -104,13 +104,20 @@ Welcome to Roast & Co.!
 
                         {% if product.available %}
 
-                        <button
-                            class="add-button"
-                            type="button"
-                            data-product-id="{{ product.id }}"
+                        <form
+                            action="{{ url_for(
+                                'add_to_cart',
+                                product_id=product.id
+                            ) }}"
+                            method="POST"
                         >
-                            Add to order
-                        </button>
+                            <button
+                                class="add-button"
+                                type="submit"
+                            >
+                                Add to order
+                            </button>
+                        </form>
 
                         {% else %}
 
@@ -165,15 +172,15 @@ Welcome to Roast & Co.!
             Roast & Co. originated as a modest weekend coffee
             stand established by two friends who shared a
             fundamental belief: high-quality coffee should
-            be personal, unhurried, and consistent.Initially
-            offering a limited selection of espresso beverages
+            be personal, unhurried, and consistent.
+            Initially offering a limited selection of espresso beverages
             and homemade pastries, the venture gradually evolved
             into a neighborhood coffee shop dedicated to quality
             ingredients, exceptional service, and the cultivation
-            of everyday rituals. Today, Roast & Co. provides meticulously
-            prepared coffee, freshly baked pastries, and desserts
-            while preserving the relaxed atmosphere that is foundational
-            to its identity.
+            of everyday rituals.
+            Today, Roast & Co. provides meticulously prepared coffee,
+            freshly baked pastries, and desserts while preserving the
+            relaxed atmosphere that is foundational to its identity.
         </p>
 
     </div>
