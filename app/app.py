@@ -2,6 +2,7 @@ import os, uuid
 
 from flask import (
     Flask,
+    flash,
     jsonify,
     redirect,
     render_template,
@@ -95,6 +96,11 @@ def add_to_cart(product_id):
     add_cart_item(
         cart_id,
         product_id,
+    )
+
+    flash(
+        f"{product['name']} was added to your cart.",
+        "cart",
     )
 
     return redirect(
