@@ -127,6 +127,58 @@ Roast & Co. | Cart
                     </h2>
 
                 </div>
+                <div class="recommendation-grid">
+
+                    {% for product in recommended_products %}
+
+                        <article class="recommendation-card">
+
+                            <div class="recommendation-image">
+                                <img
+                                    src="{{ url_for('static', filename=product.image) }}"
+                                    alt="{{ product.name }}"
+                                >
+                            </div>
+
+                            <div class="recommendation-content">
+
+                                <span class="category">
+                                    {{ product.category }}
+                                </span>
+
+                                <h3>
+                                    {{ product.name }}
+                                </h3>
+
+                                <div class="recommendation-footer">
+
+                                    <span class="price">
+                                        €{{ "%.2f"|format(product.price) }}
+                                    </span>
+
+                                    <form
+                                        action="{{ url_for(
+                                            'add_to_cart',
+                                            product_id=product.id
+                                        ) }}"
+                                        method="POST"
+                                    >
+                                        <button
+                                            class="add-button"
+                                            type="submit"
+                                        >
+                                            Add to order
+                                        </button>
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+            </div>
 
         {% endif %}
 
