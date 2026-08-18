@@ -11,7 +11,7 @@ Below you can familiarize yourself with the **main page**:
 
 and the **cart page**, accordingly:
 
-<img width="1346" height="598" alt="image" src="https://github.com/user-attachments/assets/48f7d397-67c1-45f4-a316-bbefd0bbc413" />
+<img width="1081" height="613" alt="image" src="https://github.com/user-attachments/assets/6aa8b1b4-5d68-4f0b-8254-ba92302b20dd" />
 
 ---
 
