@@ -4,7 +4,16 @@
 
 This **DevOps** project represents a containerized e-commerce-style coffee shop **Flask** app where users can browse products, add them to an order, change quantities, remove products, complete a simulated checkout, and submit ratings.
 
-<img width="1260" height="1274" alt="image" src="https://github.com/user-attachments/assets/5d16ed44-57c8-47d0-affa-f71bfdaf401a" />
+Below you can familiarize yourself with the **main page**:
+
+<img width="1251" height="1237" alt="image" src="https://github.com/user-attachments/assets/77501ed5-ae3f-460a-837a-2edff98a4f14" />
+
+
+and the **cart page**, accordingly:
+
+<img width="1346" height="598" alt="image" src="https://github.com/user-attachments/assets/48f7d397-67c1-45f4-a316-bbefd0bbc413" />
+
+---
 
 ## Project Architecture (Work in progress)
 ```
