@@ -38,6 +38,11 @@ spec:
             cpu: "100m"
         ports:
         - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: roast-co-config
+        - secretRef:
+            name: roast-co-secret
 
       startupProbe:
         httpGet:
