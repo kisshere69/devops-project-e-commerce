@@ -104,20 +104,40 @@ Roast & Co. | Coffee paradise
 
                         {% if product.available %}
 
-                        <form
-                            action="{{ url_for(
-                                'add_to_cart',
-                                product_id=product.id
-                            ) }}"
-                            method="POST"
-                        >
-                            <button
-                                class="add-button"
-                                type="submit"
+                        <div class="product-actions">
+
+                            <form
+                                action="{{ url_for(
+                                    'add_to_cart',
+                                    product_id=product.id
+                                ) }}"
+                                method="POST"
                             >
-                                Add to order
-                            </button>
-                        </form>
+                                <button
+                                    class="add-button"
+                                    type="submit"
+                                >
+                                    Add to order
+                                </button>
+                            </form>
+
+                            <form
+                                action="{{ url_for('add_to_wishlist', product_id=product.id) }}"
+                                method="POST"
+                            >
+                                <button
+                                    type="submit"
+                                    class="wishlist-button"
+                                    aria-label="Add {{ product.name }} to wishlist"
+                                >
+                                    <img
+                                        src="{{ url_for('static', filename='images/wishlist-heart.png') }}"
+                                        alt=""
+                                        class="wishlist-icon"
+                                    >
+                                </button>
+                            </form>
+                        </div>
 
                         {% else %}
 
