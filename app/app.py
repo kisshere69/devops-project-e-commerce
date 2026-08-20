@@ -22,6 +22,7 @@ from repositories.cart_repository import (
     decrease_cart_item,
     remove_cart_item,
 )
+from repositories.wishlist_repository import add_wishlist_item, get_wishlist_items
 
 app = Flask(__name__)
 
@@ -188,6 +189,51 @@ def remove_cart_product(product_id):
         )
 
     return redirect(url_for("cart"))
+
+# Wishlist
+
+@app.route("/wishlist")
+def wishlist():
+    wishlist_id = session.get("wishlist_id")
+
+    if wishlist_id is None:
+        wishlist_items = []
+    else:
+        wishlist_items = get_wishlist_items(wishlist_id)
+
+    return render_template(
+        "wishlist.html",
+        wishlist_items=wishlist_items,
+    )
+
+def get_wishlist_id():
+    if "wishlist_id" not in session:
+        session["wishlist_id"] = str(uuid.uuid4())
+
+    return session["wishlist_id"]
+
+@app.route("/wishlist/add/<int:product_id>", methods=["POST"])
+def add_to_wishlist(product_id):
+    product = get_product(product_id)
+
+    if product is None:
+        return "Product not found", 404
+
+    wishlist_id = get_wishlist_id()
+
+    add_wishlist_item(
+        wishlist_id,
+        product_id,
+    )
+
+    flash(
+        f"{product['name']} was added to your wishlist.",
+        "wishlist",
+    )
+
+    return redirect(
+        request.referrer or url_for("home")
+    )
 
 # App health checks
 
