@@ -111,3 +111,18 @@ CREATE TABLE IF NOT EXISTS cart_items (
     CONSTRAINT positive_quantity
         CHECK (quantity > 0)
 );
+
+
+CREATE TABLE IF NOT EXISTS wishlist_items (
+    id SERIAL PRIMARY KEY,
+    wishlist_id VARCHAR(50) NOT NULL,
+    product_id INTEGER NOT NULL,
+
+    CONSTRAINT fk_wishlist_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_wishlist_product
+        UNIQUE (wishlist_id, product_id)
+);
