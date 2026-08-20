@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: roast-co-config
+  namespace: dev
+
+data:
+  APP_ENV: "dev"
+  APP_NAME: "roast-co"
+  LOG_LEVEL: "INFO"
