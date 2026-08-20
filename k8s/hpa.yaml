@@ -1,0 +1,21 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+ name: roast-co-hpa
+ namespace: dev
+
+spec:
+ scaleTargetRef:
+  apiVersion: apps/v1
+  kind: Deployment
+  name: roast-co
+
+ minReplicas: 2
+ maxReplicas: 4
+
+ metrics:
+  - type: Resource
+    resource: cpu
+    target:
+      type: Utilization
+      averageUtilization: 70
