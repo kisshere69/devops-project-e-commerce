@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roast-co
+  namespace: dev
+
+spec:
+  replicas: 2
+
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 120
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+      
+  selector:
+    matchLabels:
+      app: roast-co-app
+
+  template:
+    metadata:
+      labels:
+        app: roast-co-app
+
+    spec:
+      containers:
+      - name: roast-co-app
+        image: <ECR_REPOSITORY_URL>:<IMAGE_TAG>
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 5000
+
+      startupProbe:
+        httpGet:
+          path: /health
+          port: 5000
+        failureThreshold: 5
+        periodSeconds: 12
+
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 5000
+        periodSeconds: 10
+        timeoutSeconds: 2
+        failureThreshold: 3
+        successThreshold: 1
+
+      readinessProbe:
+        httpGet:
+          path: /health/db
+          port: 5000
+        periodSeconds: 5
+        timeoutSeconds: 3
+        failureThreshold: 3
+        successThreshold: 1
