@@ -2,7 +2,9 @@
 
 ## Overview
 
-This **DevOps** project represents a containerized e-commerce-style coffee shop **Flask** app where users can browse products, add them to an order, change quantities, remove products, complete a simulated checkout, and submit ratings.
+This **DevOps** project represents a containerized e-commerce-style coffee shop **Flask** app backed by **PostgreSQL**. Users can browse products, manage a persistent shopping cart, and save products to a wishlist.
+
+The project is designed as a **production-like** DevOps environment with **Docker**, **Kubernetes**, **AWS EKS**, **Terraform**, **CI/CD**, and **observability** introduced progressively.
 
 ---
 ## Main page:
@@ -24,20 +26,24 @@ This **DevOps** project represents a containerized e-commerce-style coffee shop 
 ---
 
 ## Project Architecture (Work in progress)
-```
+```text
 devops-project-e-commerce/
 ├── app/
 │   ├── app.py
+│   ├── database.py
 │   ├── requirements.txt
 │   │
 │   ├── repositories/
-│   │   └── product_repository.py
+│   │   ├── __init__.py
+│   │   ├── product_repository.py
+│   │   ├── cart_repository.py
+│   │   └── wishlist_repository.py
 │   │
 │   ├── templates/
 │   │   ├── base.html
 │   │   ├── index.html
-│   │   ├── wishlist.html           # planned
-│   │   └── cart.html
+│   │   ├── cart.html
+│   │   └── wishlist.html
 │   │
 │   └── static/
 │       ├── css/
@@ -49,8 +55,18 @@ devops-project-e-commerce/
 ├── database/
 │   └── init.sql
 │
-├── Dockerfile                     # planned
+├── k8s/
+│   ├── namespace.yaml
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   ├── configmap.yaml
+│   ├── secret.yaml
+│   └── hpa.yaml
+│
+├── Dockerfile
 ├── docker-compose.yaml
+├── .dockerignore
 ├── .gitignore
 └── README.md
 ```
@@ -60,26 +76,50 @@ devops-project-e-commerce/
 - `/` - storefront
 - `/health` - application health check
 - `/health/db` - database health check
+- `/cart` - shopping cart health check
+- `/wishlist` - wishlist health check
+- `/cart/add/<product_id>` - add product to cart
+- `/cart/increase/<id>` - increase product quantity
+- `/cart/decrease/<id>` - decrease product quantity
+- `/cart/remove/<id>` - remove product from cart
+- `/cart/clear` - clear shopping cart
+- `/wishlist/add/<product_id>` - add product to wishlist
+- `/wishlist/remove/<product_id>` - remove product from wishlist
 
-## Near-term Architecture
+## Current Runtime Architecture
 
 ```text
 Browser
    ↓
-Flask
-   ├── Jinja Templates
-   ├── Static Assets
-   │   ├── CSS
-   │   ├── JavaScript
-   │   └── Images
+Docker Compose
    │
-   └── Product Repository
+   ├── Application Container
+   │      ↓
+   │   Gunicorn
+   │      ↓
+   │    Flask
+   │      │
+   │      ├── Jinja Templates
+   │      ├── Static Assets
+   │      │   ├── CSS
+   │      │   ├── JavaScript
+   │      │   └── Images
+   │      │
+   │      └── Repository Layer
+   │          ├── Product Repository
+   │          ├── Cart Repository
+   │          └── Wishlist Repository
+   │                 ↓
+   │              psycopg
+   │
+   └── PostgreSQL Container
           ↓
-       psycopg
+       Persistent Volume
           ↓
-      PostgreSQL
-          ↓
-       products
+       PostgreSQL
+          ├── products
+          ├── cart_items
+          └── wishlist_items
 ```
 
 ## Project status
