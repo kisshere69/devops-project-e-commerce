@@ -26,6 +26,7 @@ from repositories.wishlist_repository import (
     add_wishlist_item,
     get_wishlist_items,
     get_wishlist_count,
+    remove_wishlist_item,
 )
 
 app = Flask(__name__)
@@ -247,6 +248,18 @@ def add_to_wishlist(product_id):
     return redirect(
         request.referrer or url_for("home")
     )
+
+@app.route("/wishlist/remove/<int:product_id>", methods=["POST"])
+def remove_from_wishlist(product_id):
+    wishlist_id = session.get("wishlist_id")
+
+    if wishlist_id is not None:
+        remove_wishlist_item(
+            wishlist_id,
+            product_id,
+        )
+
+    return redirect(url_for("wishlist"))
 
 # App health checks
 
