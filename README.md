@@ -54,6 +54,11 @@ devops-project-e-commerce/
 │
 ├── database/
 │   └── init.sql
+├── terraform/
+│   ├── bakcend/
+│   ├── bootstrap/
+│   ├── environments/
+│   └── modules/
 │
 ├── k8s/
 │   ├── namespace.yaml
