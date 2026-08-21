@@ -78,3 +78,22 @@ def get_wishlist_count(wishlist_id):
 
     finally:
         connection.close()
+
+def remove_wishlist_item(wishlist_id, product_id):
+    connection = get_db_connection()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                DELETE FROM wishlist_items
+                WHERE wishlist_id = %s
+                  AND product_id = %s;
+                """,
+                (wishlist_id, product_id),
+            )
+
+        connection.commit()
+
+    finally:
+        connection.close()
