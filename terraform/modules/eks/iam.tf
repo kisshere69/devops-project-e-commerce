@@ -13,6 +13,11 @@ resource "aws_iam_role" "eks_cluster" {
       }
     ]
   })
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+    ManagedBy   = var.managed_by
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
@@ -38,6 +43,11 @@ resource "aws_iam_role" "eks_node_group" {
       }
     ]
   })
+  tags = {
+    Project     = var.project
+    Environment = var.environment
+    ManagedBy   = var.managed_by
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
