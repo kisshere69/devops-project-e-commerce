@@ -58,3 +58,23 @@ def get_wishlist_items(wishlist_id):
 
     finally:
         connection.close()
+
+def get_wishlist_count(wishlist_id):
+    connection = get_db_connection()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT COUNT(*)
+                FROM wishlist_items
+                WHERE wishlist_id = %s;
+                """,
+                (wishlist_id,),
+            )
+
+            row = cursor.fetchone()
+            return row[0]
+
+    finally:
+        connection.close()
