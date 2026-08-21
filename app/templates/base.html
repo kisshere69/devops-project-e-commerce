@@ -77,24 +77,36 @@
             >
         </a>
 
+        <div class="header-right-actions">
+            <a href="/wishlist" class="header-action-link">
+                <img
+                    src="{{ url_for('static', filename='images/wishlist-menu-icon.png') }}"
+                    alt="Wishlist"
+                    class="wishlist-header-icon"
+                >
 
-        <!-- RIGHT: Cart -->
-        <a
-            href="/cart"
-            class="cart-link"
-        >
-            <img
-                src="{{ url_for('static', filename='images/cart.png') }}"
-                alt=""
-                class="cart-icon"
-            >
-
-            {% if cart_count > 0 %}
-                <span class="cart-count">
-                    {{ cart_count }}
-                </span>
+                {% if wishlist_count > 0 %}
+                    <span class="header-action-count">
+                        {{ wishlist_count }}
+                    </span>
                 {% endif %}
-        </a>
+            </a>
+
+            <a href="/cart" class="header-action-link">
+                <img
+                    src="{{ url_for('static', filename='images/cart.png') }}"
+                    alt="Cart"
+                    class="cart-icon"
+                >
+
+                {% if cart_count > 0 %}
+                    <span class="header-action-count">
+                        {{ cart_count }}
+                    </span>
+                {% endif %}
+            </a>
+
+        </div>
 
     </div>
 </header>
