@@ -589,7 +589,18 @@ button {
     font-weight: 700;
 }
 
-.cart-count {
+/* Cart + Wishlist count */
+
+.header-action-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.header-action-count {
     min-width: 22px;
     height: 22px;
 
@@ -609,8 +620,8 @@ button {
 }
 
 .cart-icon {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
 
     display: block;
 
@@ -1168,6 +1179,8 @@ button {
     gap: 12px;
 }
 
+/* Wishlist */
+
 .wishlist-button {
     width: 44px;
     height: 44px;
@@ -1200,4 +1213,25 @@ button {
 
 .wishlist-button:active .wishlist-icon {
     transform: scale(0.95);
+}
+
+.wishlist-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wishlist-header-icon {
+    width: 33px;
+    height: 33px;
+    object-fit: contain;
+    transform: translateY(2px);
+}
+
+/* Wishlist + Cart icons */
+
+.header-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
