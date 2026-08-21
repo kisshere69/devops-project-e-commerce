@@ -22,7 +22,11 @@ from repositories.cart_repository import (
     decrease_cart_item,
     remove_cart_item,
 )
-from repositories.wishlist_repository import add_wishlist_item, get_wishlist_items
+from repositories.wishlist_repository import (
+    add_wishlist_item,
+    get_wishlist_items,
+    get_wishlist_count,
+)
 
 app = Flask(__name__)
 
@@ -120,16 +124,25 @@ def add_to_cart(product_id):
 
 
 @app.context_processor
-def inject_cart_count():
+def inject_header_counts():
     cart_id = session.get("cart_id")
+    wishlist_id = session.get("wishlist_id")
 
-    if cart_id is None:
-        return {
-            "cart_count": 0,
-        }
+    cart_count = (
+        get_cart_count(cart_id)
+        if cart_id
+        else 0
+    )
+
+    wishlist_count = (
+        get_wishlist_count(wishlist_id)
+        if wishlist_id
+        else 0
+    )
 
     return {
-        "cart_count": get_cart_count(cart_id),
+        "cart_count": cart_count,
+        "wishlist_count": wishlist_count,
     }
 
 @app.route(
