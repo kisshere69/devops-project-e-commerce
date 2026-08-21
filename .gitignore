@@ -11,3 +11,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 image.png
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!*.example.tfvars
