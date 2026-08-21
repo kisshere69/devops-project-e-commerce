@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="wishlist-page">
+    <div class="wishlist-container">
+        <h1>Your Wishlist</h1>
+
+        {% if wishlist_items %}
+            <div class="wishlist-grid">
+                {% for item in wishlist_items %}
+                    <article class="wishlist-card">
+                        <img
+                            src="{{ url_for('static', filename=item.image) }}"
+                            alt="{{ item.name }}"
+                            class="wishlist-card-image"
+                        >
+
+                        <div class="wishlist-card-content">
+                            <span class="product-category">
+                                {{ item.category }}
+                            </span>
+
+                            <h2>{{ item.name }}</h2>
+
+                            <p class="product-price">
+                                €{{ "%.2f"|format(item.price) }}
+                            </p>
+
+                            <div class="wishlist-card-actions">
+
+                                <form
+                                    action="{{ url_for('add_to_cart', product_id=item.product_id) }}"
+                                    method="POST"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="wishlist-add-button"
+                                    >
+                                        Add to order
+                                    </button>
+                                </form>
+
+                                <form
+                                    action="{{ url_for('remove_from_wishlist', product_id=item.product_id) }}"
+                                    method="POST"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="wishlist-remove-button"
+                                    >
+                                        Remove
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="wishlist-empty">
+                <h2>Your wishlist is empty</h2>
+                <p>Save items you would like to order later.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
