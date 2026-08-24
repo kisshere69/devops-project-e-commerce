@@ -1,3 +1,5 @@
+# EKS Cluster IAM Role
+
 resource "aws_iam_role" "eks_cluster" {
   name = "roast-co-eks-cluster-role"
 
@@ -23,6 +25,8 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
+# IAM Role for EKS Managed Nodes (EC2 instances)
+
 resource "aws_iam_role" "eks_node_group" {
   name = "roast-co-eks-node-group-role"
 
@@ -45,6 +49,8 @@ resource "aws_iam_role" "eks_node_group" {
   tags = local.common_tags
 
 }
+
+# IAM Role Policy Attachments
 
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   role       = aws_iam_role.eks_node_group.name
