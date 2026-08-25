@@ -20,8 +20,8 @@ resource "aws_subnet" "public_a" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.project}-${var.environment}-public-A"
-      Type = "Public"
+      Name                              = "${var.project}-${var.environment}-public-A"
+      Type                              = "Public"
       "kubernetes.io/role/internal-elb" = "1"
     }
   )
@@ -36,8 +36,8 @@ resource "aws_subnet" "public_b" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.project}-${var.environment}-public-B"
-      Type = "Public"
+      Name                              = "${var.project}-${var.environment}-public-B"
+      Type                              = "Public"
       "kubernetes.io/role/internal-elb" = "1"
     }
   )
@@ -66,6 +66,18 @@ resource "aws_subnet" "private_b" {
     local.common_tags,
     {
       Name = "${var.project}-${var.environment}-private-B"
+      Type = "Private"
+    }
+  )
+}
+
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-internet-gateway"
       Type = "Private"
     }
   )
