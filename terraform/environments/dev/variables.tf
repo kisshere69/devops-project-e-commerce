@@ -107,3 +107,33 @@ variable "private_subnet_ids" {
   description = "Private subnet IDs"
   type        = list(string)
 }
+
+variable "public_subnet_a_cidr" {
+  description = "value"
+  type = string
+}
+
+variable "public_subnet_b_cidr" {
+  description = "value"
+  type = string
+}
+
+variable "private_subnet_a_cidr" {
+  description = "Private subnet A CIDR block"
+  type        = string
+}
+
+variable "private_subnet_b_cidr" {
+  description = "Private subnet B CIDR block"
+  type        = string
+}
+
+variable "az_a" {
+  description = "Availability zone A"
+  type = string
+}
+
+variable "az_b" {
+  description = "Availability zone B"
+  type = string
+}
