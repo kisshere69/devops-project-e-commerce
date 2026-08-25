@@ -108,3 +108,21 @@ resource "aws_nat_gateway" "this" {
 
   depends_on = [aws_internet_gateway.this]
 }
+
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-public-route-table"
+    Project     = var.project
+    Environment = var.environment
+    Type        = "Public"
+  }
+}
+
+resource "aws_route" "public_internet_access" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this.id
+}
