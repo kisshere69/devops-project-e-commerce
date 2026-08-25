@@ -113,12 +113,13 @@ resource "aws_nat_gateway" "this" {
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 
-  tags = {
-    Name        = "${var.project}-${var.environment}-public-route-table"
-    Project     = var.project
-    Environment = var.environment
-    Type        = "Public"
-  }
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-public-route-table"
+      Type = "Public"
+    }
+  )
 }
 
 resource "aws_route" "public_internet_access" {
@@ -135,4 +136,21 @@ resource "aws_route_table_association" "public_a" {
 resource "aws_route_table_association" "public_b" {
   subnet_id      = aws_subnet.public_b.id
   route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-private-route-table"
+      Type = "Private"
+    }
+  )
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.this.id
+  }
 }
