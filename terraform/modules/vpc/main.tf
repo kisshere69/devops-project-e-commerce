@@ -1,12 +1,72 @@
 resource "aws_vpc" "this" {
-  cidr_block = var.vpc_cidr
+  cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
 
-  tags = merge (
+  tags = merge(
     local.common_tags,
     {
-        Name = "${var.project}-${var.environment}-vpc"
+      Name = "${var.project}-${var.environment}-vpc"
+    }
+  )
+}
+
+resource "aws_subnet" "public_a" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = var.public_subnet_a_cidr
+  availability_zone       = var.az_a
+  map_public_ip_on_launch = true
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-public-A"
+      Type = "Public"
+      "kubernetes.io/role/internal-elb" = "1"
+    }
+  )
+}
+
+resource "aws_subnet" "public_b" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = var.public_subnet_b_cidr
+  availability_zone       = var.az_b
+  map_public_ip_on_launch = true
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-public-B"
+      Type = "Public"
+      "kubernetes.io/role/internal-elb" = "1"
+    }
+  )
+}
+
+resource "aws_subnet" "private_a" {
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = var.private_subnet_a_cidr
+  availability_zone = var.az_a
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-private-A"
+      Type = "Private"
+    }
+  )
+}
+
+resource "aws_subnet" "private_b" {
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = var.private_subnet_b_cidr
+  availability_zone = var.az_b
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-private-B"
+      Type = "Private"
     }
   )
 }

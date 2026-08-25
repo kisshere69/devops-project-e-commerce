@@ -20,5 +20,35 @@ variable "managed_by" {
 
 variable "vpc_cidr" {
   description = "A VPC used for the project"
-  type = string
+  type        = string
+}
+
+variable "public_subnet_a_cidr" {
+  description = "Public subnet A CIDR block"
+  type        = string
+}
+
+variable "public_subnet_b_cidr" {
+  description = "Public subnet B CIDR block"
+  type        = string
+}
+
+variable "private_subnet_a_cidr" {
+  description = "Private subnet A CIDR block"
+  type        = string
+}
+
+variable "private_subnet_b_cidr" {
+  description = "Private subnet B CIDR block"
+  type        = string
+}
+
+variable "az_a" {
+  description = "Availability zone A"
+  type        = string
+}
+
+variable "az_b" {
+  description = "Availability zone B"
+  type        = string
 }
