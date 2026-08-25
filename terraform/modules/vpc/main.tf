@@ -78,7 +78,19 @@ resource "aws_internet_gateway" "this" {
     local.common_tags,
     {
       Name = "${var.project}-${var.environment}-internet-gateway"
-      Type = "Private"
     }
   )
+}
+
+resource "aws_eip" "nat" {
+  domain = "vpc"
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-nat-eip"
+    }
+  )
+
+  depends_on = [aws_internet_gateway.this]
 }
