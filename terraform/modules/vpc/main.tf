@@ -94,3 +94,17 @@ resource "aws_eip" "nat" {
 
   depends_on = [aws_internet_gateway.this]
 }
+
+resource "aws_nat_gateway" "this" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public_a.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-nat-gateway"
+    }
+  )
+
+  depends_on = [aws_internet_gateway.this]
+}
