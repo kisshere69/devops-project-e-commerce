@@ -6,6 +6,10 @@ resource "aws_eks_cluster" "this" {
 
   version = var.cluster_version
 
+  access_config {
+    authentication_mode = "API"
+  }
+
   vpc_config {
     subnet_ids              = var.private_subnet_ids
     endpoint_private_access = true
