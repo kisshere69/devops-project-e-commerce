@@ -20,9 +20,9 @@ resource "aws_subnet" "public_a" {
   tags = merge(
     local.common_tags,
     {
-      Name                              = "${var.project}-${var.environment}-public-A"
-      Type                              = "Public"
-      "kubernetes.io/role/internal-elb" = "1"
+      Name                     = "${var.project}-${var.environment}-public-A"
+      Type                     = "Public"
+      "kubernetes.io/role/elb" = "1"
     }
   )
 }
@@ -36,9 +36,9 @@ resource "aws_subnet" "public_b" {
   tags = merge(
     local.common_tags,
     {
-      Name                              = "${var.project}-${var.environment}-public-B"
-      Type                              = "Public"
-      "kubernetes.io/role/internal-elb" = "1"
+      Name                     = "${var.project}-${var.environment}-public-B"
+      Type                     = "Public"
+      "kubernetes.io/role/elb" = "1"
     }
   )
 }
@@ -51,8 +51,9 @@ resource "aws_subnet" "private_a" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.project}-${var.environment}-private-A"
-      Type = "Private"
+      Name                              = "${var.project}-${var.environment}-private-A"
+      Type                              = "Private"
+      "kubernetes.io/role/internal-elb" = "1"
     }
   )
 }
@@ -65,8 +66,9 @@ resource "aws_subnet" "private_b" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.project}-${var.environment}-private-B"
-      Type = "Private"
+      Name                              = "${var.project}-${var.environment}-private-B"
+      Type                              = "Private"
+      "kubernetes.io/role/internal-elb" = "1"
     }
   )
 }
