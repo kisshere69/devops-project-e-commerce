@@ -18,9 +18,9 @@ provider "aws" {
 module "vpc" {
   source = "../../modules/vpc"
 
-  project = var.project
-  environment  = var.environment
-  vpc_cidr     = var.vpc_cidr
+  project     = var.project
+  environment = var.environment
+  vpc_cidr    = var.vpc_cidr
 
   public_subnet_a_cidr = var.public_subnet_a_cidr
   az_a                 = var.az_a
