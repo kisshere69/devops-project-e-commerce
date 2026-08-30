@@ -40,7 +40,7 @@ module "eks" {
 
   vpc_cidr = var.vpc_cidr
 
-  cluster_name    = aws_eks_cluster.this.name
+  cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
 
   private_subnet_ids = module.vpc.private_subnet_ids
