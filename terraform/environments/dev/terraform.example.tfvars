@@ -23,3 +23,7 @@ node_desired_size   = 2
 node_min_size       = 1
 node_max_size       = 3
 node_disk_size      = 20
+
+repository           = "roast-co-app"
+image_tag_mutability = "MUTABLE"
+scan_on_push         = true
