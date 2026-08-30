@@ -63,5 +63,8 @@ resource "aws_eks_node_group" "this" {
   depends_on = [
     aws_iam_role_policy_attachment.eks_worker_node_policy,
     aws_iam_role_policy_attachment.eks_ecr_pull_policy,
+    aws_iam_role_policy_attachment.vpc_cni,
+    aws_eks_addon.pod_identity_agent,
+    aws_eks_pod_identity_association.vpc_cni
   ]
 }
