@@ -96,6 +96,13 @@ variable "node_disk_size" {
   }
 }
 
+# EKS Access Entry
+
+variable "cluster_admin_principal_arn" {
+  description = "IAM principal ARN granted administrative access to the EKS cluster"
+  type        = string
+}
+
 # VPC
 
 variable "vpc_cidr" {
