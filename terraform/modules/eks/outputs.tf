@@ -1,6 +1,6 @@
 output "cluster_role_arn" {
   description = "Amazon EKS cluster IAM Role ARN"
-  value = aws_iam_role.eks_cluster.arn
+  value       = aws_iam_role.eks_cluster.arn
 }
 
 output "cluster_name" {
