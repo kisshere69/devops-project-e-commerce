@@ -110,12 +110,12 @@ variable "private_subnet_ids" {
 
 variable "public_subnet_a_cidr" {
   description = "value"
-  type = string
+  type        = string
 }
 
 variable "public_subnet_b_cidr" {
   description = "value"
-  type = string
+  type        = string
 }
 
 variable "private_subnet_a_cidr" {
@@ -130,10 +130,10 @@ variable "private_subnet_b_cidr" {
 
 variable "az_a" {
   description = "Availability zone A"
-  type = string
+  type        = string
 }
 
 variable "az_b" {
   description = "Availability zone B"
-  type = string
+  type        = string
 }
