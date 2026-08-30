@@ -54,3 +54,15 @@ module "eks" {
   node_max_size     = var.node_max_size
   node_disk_size    = var.node_disk_size
 }
+
+module "ecr" {
+  source = "../../modules/ecr"
+
+  project     = var.project
+  environment = var.environment
+  managed_by  = var.managed_by
+
+  repository           = var.repository
+  image_tag_mutability = var.image_tag_mutability
+  scan_on_push         = var.scan_on_push
+}
