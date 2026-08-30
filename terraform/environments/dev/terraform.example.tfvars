@@ -27,3 +27,5 @@ node_disk_size      = 20
 repository           = "roast-co-app"
 image_tag_mutability = "MUTABLE"
 scan_on_push         = true
+
+cluster_admin_principal_arn = "arn:aws:iam::<ACCOUNT_ID>:user/terraform-user"
