@@ -72,7 +72,8 @@ module "ecr" {
 module "alb-controller" {
   source = "../../modules/alb-controller"
 
-  project     = var.project
-  environment = var.environment
-  managed_by  = var.managed_by
+  project      = var.project
+  environment  = var.environment
+  managed_by   = var.managed_by
+  cluster_name = module.eks.cluster_name
 }
