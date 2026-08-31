@@ -15,3 +15,10 @@ variable "managed_by" {
   type        = string
   default     = "Terraform"
 }
+
+# EKS Cluster
+
+variable "cluster_name" {
+  description = "Cluster name"
+  type        = string
+}
