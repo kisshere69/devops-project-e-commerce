@@ -2,3 +2,4 @@ flask
 gunicorn
 psycopg[binary]
 alembic
+prometheus-client
