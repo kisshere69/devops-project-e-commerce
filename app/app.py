@@ -48,9 +48,12 @@ app.config["SECRET_KEY"] = os.getenv(
 @app.before_request
 def start_request_timer():
     g.request_start_time = time.perf_counter()
+    g.request_id = str(uuid.uuid4())
 
 @app.after_request
 def log_request(response):
+    response.headers["X-Request-ID"] = g.request_id
+    
     if request.path.startswith("/static/") or request.path == "/health":
         return response
     
@@ -62,6 +65,7 @@ def log_request(response):
     logger.info(
         "Request completed",
         extra={
+            "request_id": g.request_id,
             "method": request.method,
             "path": request.path,
             "status_code": response.status_code,
