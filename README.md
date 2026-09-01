@@ -31,6 +31,7 @@ devops-project-e-commerce/
 ├── app/
 │   ├── app.py
 │   ├── database.py
+│   ├── logging_config.py
 │   ├── requirements.txt
 │   │
 │   ├── repositories/
@@ -54,11 +55,16 @@ devops-project-e-commerce/
 │
 ├── database/
 │   └── init.sql
+│
 ├── terraform/
 │   ├── bakcend/
 │   ├── bootstrap/
 │   ├── environments/
 │   └── modules/
+│       ├── vpc/
+│       ├── ecr/
+│       ├── eks/
+│       └── alb-controller/
 │
 ├── k8s/
 │   ├── namespace.yaml
@@ -90,6 +96,7 @@ devops-project-e-commerce/
 - `/cart/clear` - clear shopping cart
 - `/wishlist/add/<product_id>` - add product to wishlist
 - `/wishlist/remove/<product_id>` - remove product from wishlist
+- `/metrics` - Prometheus scraping
 
 ## Current Runtime Architecture
 
@@ -109,6 +116,14 @@ Docker Compose
    │      │   ├── CSS
    │      │   ├── JavaScript
    │      │   └── Images
+   │      │
+   │      ├── Structured Logging
+   │      │   ├── JSON logs
+   │      │   ├── Request IDs
+   │      │   └── Request duration
+   │      │
+   │      ├── Prometheus Metrics
+   │      │   └── /metrics
    │      │
    │      └── Repository Layer
    │          ├── Product Repository
