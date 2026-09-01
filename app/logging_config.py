@@ -12,6 +12,7 @@ class CustomJsonFormatter(logging.Formatter):
         }
 
         extra_fields = [
+            "request_id",
             "status_code",
             "method",
             "path",
@@ -21,7 +22,7 @@ class CustomJsonFormatter(logging.Formatter):
         for field in extra_fields:
             if hasattr(record, field):
                 log_record[field] = getattr(record, field)
-                
+
         return json.dumps(log_record)
 
 def configure_logging():
