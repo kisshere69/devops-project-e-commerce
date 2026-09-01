@@ -76,15 +76,17 @@ def log_request(response):
         },
     )
 
+    route = request.url_rule.rule if request.url_rule else "unknown"
+
     HTTP_REQUESTS_TOTAL.labels(
         method=request.method,
-        path=request.path,
+        path=route,
         status_code=response.status_code,
     ).inc()
 
     HTTP_REQUEST_DURATION_SECONDS.labels(
     method=request.method,
-    path=request.path,
+    path=route,
     ).observe(duration_ms / 1000)
 
     return response
