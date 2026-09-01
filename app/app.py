@@ -1,4 +1,4 @@
-import os, uuid
+import os, uuid, logging, time
 
 from flask import (
     Flask,
@@ -9,6 +9,8 @@ from flask import (
     request,
     session,
     url_for,
+    g,
+    request
 )
 from database import get_db_connection
 from repositories.product_repository import get_product, get_products
@@ -29,12 +31,42 @@ from repositories.wishlist_repository import (
     remove_wishlist_item,
 )
 
+from logging_config import configure_logging
+
+configure_logging()
+
+logger = logging.getLogger(__name__)
+logger.info("Application started")
+
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv(
     "SECRET_KEY",
     "dev-secret-key"
 )
+
+@app.before_request
+def start_request_timer():
+    g.request_start_time = time.perf_counter()
+
+@app.after_request
+def log_request(response):
+    duration_ms = round(
+        (time.perf_counter() - g.request_start_time) * 1000,
+        2,
+    )
+
+    logger.info(
+        "Request completed",
+        extra={
+            "method": request.method,
+            "path": request.path,
+            "status_code": response.status_code,
+            "duration_ms": duration_ms,
+        },
+    )
+
+    return response
 
 @app.route("/")
 def home():
