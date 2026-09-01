@@ -6,11 +6,11 @@ from flask import (
     jsonify,
     redirect,
     render_template,
-    request,
     session,
     url_for,
     g,
-    request
+    request,
+    Response,
 )
 from database import get_db_connection
 from repositories.product_repository import get_product, get_products
@@ -32,6 +32,7 @@ from repositories.wishlist_repository import (
 )
 
 from logging_config import configure_logging
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 configure_logging()
 
@@ -44,6 +45,8 @@ app.config["SECRET_KEY"] = os.getenv(
     "SECRET_KEY",
     "dev-secret-key"
 )
+
+# Logging and request tracking
 
 @app.before_request
 def start_request_timer():
@@ -73,7 +76,29 @@ def log_request(response):
         },
     )
 
+    HTTP_REQUESTS_TOTAL.labels(
+        method=request.method,
+        path=request.path,
+        status_code=response.status_code,
+    ).inc()
+
+    HTTP_REQUEST_DURATION_SECONDS.labels(
+    method=request.method,
+    path=request.path,
+    ).observe(duration_ms / 1000)
+
     return response
+
+# Metrics
+
+@app.route("/metrics")
+def metrics():
+    return Response(
+        generate_latest(),
+        mimetype=CONTENT_TYPE_LATEST,
+    )
+
+# Home
 
 @app.route("/")
 def home():
@@ -83,6 +108,8 @@ def home():
         "index.html",
         products=products,
     )
+
+# Products
 
 @app.route("/api/products/<int:product_id>")
 def product_api(product_id):
@@ -162,6 +189,8 @@ def add_to_cart(product_id):
         request.referrer or url_for("home")
     )
 
+
+# Wishlist and Cart items counter
 
 @app.context_processor
 def inject_header_counts():
@@ -334,6 +363,20 @@ def database_health():
                 "error": str(error),
             }
         ), 500
+
+# Metrics
+
+HTTP_REQUESTS_TOTAL = Counter(
+    "http_requests_total",
+    "Total number of HTTP requests",
+    ["method", "path", "status_code"],
+)
+
+HTTP_REQUEST_DURATION_SECONDS = Histogram(
+    "http_request_duration_seconds",
+    "HTTP request duration in seconds",
+    ["method", "path"],
+)
 
 if __name__ == "__main__":
     app.run(
