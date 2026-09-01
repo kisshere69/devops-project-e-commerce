@@ -51,6 +51,9 @@ def start_request_timer():
 
 @app.after_request
 def log_request(response):
+    if request.path.startswith("/static/") or request.path == "/health":
+        return response
+    
     duration_ms = round(
         (time.perf_counter() - g.request_start_time) * 1000,
         2,
