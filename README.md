@@ -75,6 +75,10 @@ devops-project-e-commerce/
 │   ├── secret.yaml
 │   └── hpa.yaml
 │
+├── load-testing/
+│   └── k6/
+│       └── smoke.js
+│
 ├── observability/
 │   └── prometheus/
 │       └── prometheus.yml
