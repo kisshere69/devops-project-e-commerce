@@ -69,6 +69,15 @@ services:
     depends_on:
       - prometheus
 
+  k6:
+    image: grafana/k6:latest
+    container_name: roast-co-k6
+
+    volumes:
+      - ./load-testing/k6/smoke.js:/scripts/smoke.js:ro
+
+    entrypoint: ["k6"]
+
 volumes:
   postgres_data:
   grafana_data:
