@@ -58,5 +58,17 @@ services:
     depends_on:
       - app
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: roast-co-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+    depends_on:
+      - prometheus
+
 volumes:
   postgres_data:
+  grafana_data:
