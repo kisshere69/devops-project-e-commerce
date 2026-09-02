@@ -75,6 +75,10 @@ devops-project-e-commerce/
 │   ├── secret.yaml
 │   └── hpa.yaml
 │
+├── observability/
+│   └── prometheus/
+│       └── prometheus.yml
+│
 ├── Dockerfile
 ├── docker-compose.yaml
 ├── .dockerignore
