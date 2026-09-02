@@ -80,8 +80,19 @@ devops-project-e-commerce/
 │       └── smoke.js
 │
 ├── observability/
-│   └── prometheus/
-│       └── prometheus.yml
+│   ├── prometheus/
+│   │   └── prometheus.yml
+│   │
+│   └── grafana/
+│       ├── dashboards/
+│       │   └── requests-dashboard.json
+│       │
+│       └── provisioning/
+│           ├── dashboards/
+│           │   └── dashboard.yml
+│           │
+│           └── datasources/
+│               └── prometheus.yml
 │
 ├── Dockerfile
 ├── docker-compose.yaml
