@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "roast-co-app"
+    metrics_path: /metrics
+    scheme: http
+    
+    static_configs:
+      - targets:
+          - "app:5000"
