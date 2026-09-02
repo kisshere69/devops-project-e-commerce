@@ -92,7 +92,7 @@ devops-project-e-commerce/
 │           │   └── dashboard.yml
 │           │
 │           └── datasources/
-│               └── prometheus.yml
+│               └── datasource.yml
 │
 ├── Dockerfile
 ├── docker-compose.yaml
