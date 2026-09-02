@@ -56,15 +56,36 @@ def start_request_timer():
 @app.after_request
 def log_request(response):
     response.headers["X-Request-ID"] = g.request_id
-    
-    if request.path.startswith("/static/") or request.path == "/health":
-        return response
-    
+
     duration_ms = round(
         (time.perf_counter() - g.request_start_time) * 1000,
         2,
     )
 
+    excluded_paths = ["/metrics", "/health"]
+    is_static = request.path.startswith("/static/")
+
+    # Prometheus metrics
+
+    if request.path not in excluded_paths and not is_static:
+        route = request.url_rule.rule if request.url_rule else "unknown"
+
+        HTTP_REQUESTS_TOTAL.labels(
+            method=request.method,
+            path=route,
+            status_code=response.status_code,
+        ).inc()
+
+        HTTP_REQUEST_DURATION_SECONDS.labels(
+        method=request.method,
+        path=route,
+        ).observe(duration_ms / 1000)
+
+    # Structured logs
+
+    if is_static or request.path in excluded_paths:
+        return response
+    
     logger.info(
         "Request completed",
         extra={
@@ -75,19 +96,6 @@ def log_request(response):
             "duration_ms": duration_ms,
         },
     )
-
-    route = request.url_rule.rule if request.url_rule else "unknown"
-
-    HTTP_REQUESTS_TOTAL.labels(
-        method=request.method,
-        path=route,
-        status_code=response.status_code,
-    ).inc()
-
-    HTTP_REQUEST_DURATION_SECONDS.labels(
-    method=request.method,
-    path=route,
-    ).observe(duration_ms / 1000)
 
     return response
 
