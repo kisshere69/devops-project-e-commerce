@@ -64,6 +64,7 @@ devops-project-e-commerce/
 │       ├── vpc/
 │       ├── ecr/
 │       ├── eks/
+│       ├── acm-certificate/
 │       └── alb-controller/
 │
 ├── k8s/
