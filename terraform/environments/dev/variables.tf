@@ -168,3 +168,28 @@ variable "scan_on_push" {
   type        = bool
   default     = true
 }
+
+# ACM Certificate
+
+variable "domain_name" {
+  description = "The domain name for the ACM certificate."
+  type        = string
+}
+
+variable "subject_alternative_names" {
+  description = "A list of subject alternative names for the ACM certificate."
+  type        = list(string)
+}
+
+# Cloudflare
+
+variable "cloudflare_zone_id" {
+  description = "The Cloudflare zone ID for the domain."
+  type        = string
+}
+
+variable "cloudflare_api_token" {
+  description = "The Cloudflare API token for managing DNS records."
+  type      = string
+  sensitive = true
+}
