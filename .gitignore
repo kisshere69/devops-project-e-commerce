@@ -18,3 +18,5 @@ crash.log
 crash.*.log
 *.tfvars
 !*.example.tfvars
+*.deb
+tfplan
