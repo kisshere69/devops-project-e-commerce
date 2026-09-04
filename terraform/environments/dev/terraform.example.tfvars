@@ -29,3 +29,7 @@ image_tag_mutability = "MUTABLE"
 scan_on_push         = true
 
 cluster_admin_principal_arn = "arn:aws:iam::<ACCOUNT_ID>:user/terraform-user"
+
+domain_name = "roast-and-co.online"
+subject_alternative_names = ["www.roast-and-co.online"]
+cloudflare_zone_id = "value"
