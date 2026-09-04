@@ -1,0 +1,6 @@
+project           = "roast-co"
+region            = "eu-central-1"
+environment       = "shared"
+
+state_bucket_name = "value"
+purpose           = "Terraform State"
