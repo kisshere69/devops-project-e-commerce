@@ -8,11 +8,19 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4.0"
+    }
   }
 }
 
 provider "aws" {
   region = "eu-central-1"
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
 }
 
 module "vpc" {
@@ -76,4 +84,12 @@ module "alb-controller" {
   environment  = var.environment
   managed_by   = var.managed_by
   cluster_name = module.eks.cluster_name
+}
+
+module "acm-certificate" {
+  source = "../../modules/acm-certificate"
+
+  domain_name               = var.domain_name
+  subject_alternative_names = var.subject_alternative_names
+  cloudflare_zone_id        = var.cloudflare_zone_id
 }
