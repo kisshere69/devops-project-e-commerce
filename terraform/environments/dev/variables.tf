@@ -108,6 +108,13 @@ variable "cluster_admin_principal_arn" {
   type        = string
 }
 
+# EKS Security Group ID
+
+variable "eks_security_group_id" {
+  description = "EKS security group allowed to access PostgreSQL"
+  type        = string
+}
+
 # VPC
 
 variable "vpc_cidr" {
@@ -214,4 +221,32 @@ variable "github_oidc_provider_arn" {
 variable "github_oidc_subject" {
   description = "The subject of the GitHub OIDC provider."
   type        = string
+}
+
+# RDS
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+}
+
+variable "db_username" {
+  description = "Master username for the PostgreSQL database"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Master password for the PostgreSQL database"
+  type        = string
+  sensitive   = true
+}
+
+variable "instance_class" {
+  description = "RDS instance class"
+  type        = string
+}
+
+variable "allocated_storage" {
+  description = "Allocated storage in GB"
+  type        = number
 }
