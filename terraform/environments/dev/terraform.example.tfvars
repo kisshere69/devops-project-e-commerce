@@ -38,3 +38,8 @@ cloudflare_zone_id        = "value"
 github_repo              = "kisshere69/devops-project-e-commerce"
 github_oidc_provider_arn = "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com"
 github_oidc_subject      = "repo:kisshere69/devops-project-e-commerce:*"
+
+db_name           = "coffee_shop"
+db_username       = "roast_admin"
+instance_class    = "db.t3.micro"
+allocated_storage = 20
