@@ -10,7 +10,6 @@ permissions:
 env:
   AWS_REGION: eu-central-1
   ECR_REPOSITORY: roast-co-app
-  EKS_CLUSTER: roast-co-dev
 
 jobs:
   build-and-push:
@@ -18,13 +17,17 @@ jobs:
     outputs:
       image-tag: ${{ steps.meta.outputs.tag }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::215229808174:role/github-actions-roast-co
+          role-to-assume: ${{ vars.AWS_GITHUB_ACTIONS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
 
       - name: Login to ECR
         id: ecr-login
@@ -34,7 +37,7 @@ jobs:
         id: meta
         run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build and push
+      - name: Build and push Docker image to ECR
         env:
           REGISTRY: ${{ steps.ecr-login.outputs.registry }}
         run: |
