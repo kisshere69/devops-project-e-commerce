@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region = var.region
 }
 
 provider "cloudflare" {
@@ -92,4 +92,19 @@ module "acm-certificate" {
   domain_name               = var.domain_name
   subject_alternative_names = var.subject_alternative_names
   cloudflare_zone_id        = var.cloudflare_zone_id
+}
+
+module "github-oidc" {
+  source       = "../../modules/github-oidc"
+  github_repo  = var.github_repo
+  cluster_name = var.cluster_name
+  cluster_arn  = module.eks.cluster_arn
+
+  github_oidc_subject      = var.github_oidc_subject
+  github_oidc_provider_arn = var.github_oidc_provider_arn
+  repository               = var.repository
+  project                  = var.project
+  environment              = var.environment
+  managed_by               = var.managed_by
+  region                   = var.region
 }
