@@ -1,4 +1,4 @@
-name: Build & Push
+name: Checks & Build & Push
 
 on:
   workflow_dispatch:
@@ -12,7 +12,100 @@ env:
   ECR_REPOSITORY: roast-co-app
 
 jobs:
+  terraform-checks:
+    name: Terraform Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform format check
+        run: terraform fmt -check -recursive terraform
+
+      - name: Terraform initialization
+        working-directory: terraform/environments/dev
+        run: terraform init -backend=false
+
+      - name: Terraform validation
+        working-directory: terraform/environments/dev
+        run: terraform validate
+
+  docker-checks:
+    name: Docker Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+      - name: Docker build validation
+        run: docker build -t roast-co-app:ci .
+
+      - name: Image scan for vulnerabilities
+        run:
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:latest image --severity HIGH,CRITICAL roast-co-app:ci
+
+
+  app-checks:
+    name: Application Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        working-directory: app
+        run: pip install -r requirements.txt
+
+      - name: Install lint/test tooling
+        run: |
+          pip install flake8 pytest bandit pip-audit
+
+      - name: Lint Python code
+        run: flake8 app
+
+      - name: Compile Python files
+        run: python -m compileall app
+
+      - name: Smoke test
+        working-directory: app
+        run: |
+          python - <<'PY'
+          from app import app
+
+          client = app.test_client()
+          response = client.get("/health")
+          assert response.status_code == 200, response.data
+          data = response.get_json()
+          assert data["status"] == "healthy", data
+          print("Health check passed")
+          PY
+
+      - name: Security scan
+        run: bandit -r app
+
   build-and-push:
+    needs:
+      - terraform-checks
+      - docker-checks
+      - app-checks
+
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.meta.outputs.tag }}
