@@ -108,13 +108,6 @@ variable "cluster_admin_principal_arn" {
   type        = string
 }
 
-# EKS Security Group ID
-
-variable "eks_security_group_id" {
-  description = "EKS security group allowed to access PostgreSQL"
-  type        = string
-}
-
 # VPC
 
 variable "vpc_cidr" {
