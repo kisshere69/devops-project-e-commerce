@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: roast-co-app
-        image: <ECR_REPOSITORY_URL>:<IMAGE_TAG>
+        image: 215229808174.dkr.ecr.eu-central-1.amazonaws.com/roast-co-app:v1
         resources:
           limits:
             memory: "128Mi"
