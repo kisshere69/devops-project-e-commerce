@@ -16,6 +16,11 @@ variable "managed_by" {
   default     = "Terraform"
 }
 
+variable "region" {
+  description = "AWS region"
+  type        = string
+}
+
 # EKS Cluster
 
 variable "cluster_name" {
@@ -190,6 +195,23 @@ variable "cloudflare_zone_id" {
 
 variable "cloudflare_api_token" {
   description = "The Cloudflare API token for managing DNS records."
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
+}
+
+# GitHub OIDC
+
+variable "github_repo" {
+  description = "GitHub repository."
+  type        = string
+}
+
+variable "github_oidc_provider_arn" {
+  description = "The ARN of the GitHub OIDC provider."
+  type        = string
+}
+
+variable "github_oidc_subject" {
+  description = "The subject of the GitHub OIDC provider."
+  type        = string
 }
