@@ -75,7 +75,10 @@ jobs:
 
       - name: Install lint/test tooling
         run: |
-          pip install flake8 pytest bandit pip-audit
+          pip install flake8 bandit pip-audit
+
+      - name: Audit Python dependencies
+        run: pip-audit
 
       - name: Lint Python code
         run: flake8 app
@@ -105,9 +108,6 @@ jobs:
       - terraform-checks
       - docker-checks
       - app-checks
-
-    # Running the deployment job only on the main branch
-    if: github.ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
 
