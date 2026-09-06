@@ -36,3 +36,8 @@ output "node_role_arn" {
   description = "IAM role ARN used by EKS worker nodes"
   value       = aws_iam_role.eks_node_group.arn
 }
+
+output "cluster_security_group_id" {
+  description = "EKS cluster security group ID"
+  value       = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+}
