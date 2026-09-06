@@ -1,6 +1,7 @@
 project     = "roast-co"
 environment = "dev"
 managed_by  = "Terraform"
+region      = "eu-central-1"
 
 cluster_name    = "roast-co-dev"
 cluster_version = "1.36"
@@ -30,6 +31,10 @@ scan_on_push         = true
 
 cluster_admin_principal_arn = "arn:aws:iam::<ACCOUNT_ID>:user/terraform-user"
 
-domain_name = "roast-and-co.online"
+domain_name               = "roast-and-co.online"
 subject_alternative_names = ["www.roast-and-co.online"]
-cloudflare_zone_id = "value"
+cloudflare_zone_id        = "value"
+
+github_repo              = "kisshere69/devops-project-e-commerce"
+github_oidc_provider_arn = "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com"
+github_oidc_subject      = "repo:kisshere69/devops-project-e-commerce:*"
