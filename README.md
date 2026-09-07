@@ -167,6 +167,20 @@ www.roast-and-co.online
                  └── wishlist_items
 ```
 
+## AWS Runtime Architecture
+
+```text
+www.roast-and-co.online
+        ↓
+    Cloudflare
+        ↓
+    Amazon ALB
+        ↓
+     AWS EKS
+        ↓
+ Flask Pods → Amazon RDS PostgreSQL
+```
+
 ## Project status
 
 Work in progress
