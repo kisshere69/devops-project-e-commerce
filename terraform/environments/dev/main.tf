@@ -107,6 +107,10 @@ module "github-oidc" {
   environment              = var.environment
   managed_by               = var.managed_by
   region                   = var.region
+
+  depends_on = [
+    module.eks
+  ]
 }
 
 module "rds" {
