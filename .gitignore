@@ -20,3 +20,4 @@ crash.*.log
 !*.example.tfvars
 *.deb
 tfplan
+*.dump
