@@ -118,48 +118,53 @@ devops-project-e-commerce/
 - `/wishlist/remove/<product_id>` - remove product from wishlist
 - `/metrics` - Prometheus scraping
 
-## Current Runtime Architecture
+## Current Local Runtime Architecture
 
 ```text
-Browser
-   ↓
-Docker Compose
-   │
-   ├── Application Container
-   │      ↓
-   │   Gunicorn
-   │      ↓
-   │    Flask
-   │      │
-   │      ├── Jinja Templates
-   │      ├── Static Assets
-   │      │   ├── CSS
-   │      │   ├── JavaScript
-   │      │   └── Images
-   │      │
-   │      ├── Structured Logging
-   │      │   ├── JSON logs
-   │      │   ├── Request IDs
-   │      │   └── Request duration
-   │      │
-   │      ├── Prometheus Metrics
-   │      │   └── /metrics
-   │      │
-   │      └── Repository Layer
-   │          ├── Product Repository
-   │          ├── Cart Repository
-   │          └── Wishlist Repository
-   │                 ↓
-   │              psycopg
-   │
-   └── PostgreSQL Container
+www.roast-and-co.online
           ↓
-       Persistent Volume
+       Cloudflare
           ↓
-       PostgreSQL
-          ├── products
-          ├── cart_items
-          └── wishlist_items
+   Cloudflare Tunnel
+          ↓
+    Docker Compose
+          │
+          ├── Application Container
+          │      ↓
+          │   Gunicorn
+          │      ↓
+          │    Flask
+          │      │
+          │      ├── Jinja Templates
+          │      ├── Static Assets
+          │      │      ├── CSS
+          │      │      ├── JavaScript
+          │      │      └── Images
+          │      │
+          │      ├── Structured Logging
+          │      │      ├── JSON Logs
+          │      │      ├── Request IDs
+          │      │      └── Request Duration
+          │      │
+          │      ├── Prometheus Metrics
+          │      │      └── /metrics
+          │      │
+          │      └── Repository Layer
+          │             ├── Product Repository
+          │             ├── Cart Repository
+          │             └── Wishlist Repository
+          │                    ↓
+          │                 psycopg
+          │                    ↓
+          │
+          └── PostgreSQL Container
+                 ↓
+            Persistent Volume
+                 ↓
+             PostgreSQL
+                 ├── products
+                 ├── cart_items
+                 └── wishlist_items
 ```
 
 ## Project status
