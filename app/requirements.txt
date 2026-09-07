@@ -3,3 +3,4 @@ gunicorn
 psycopg[binary]
 alembic
 prometheus-client
+sqlalchemy
