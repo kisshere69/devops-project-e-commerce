@@ -33,3 +33,8 @@ output "eks_node_group_name" {
 output "github_actions_role_arn" {
   value = module.github-oidc.github_actions_role_arn
 }
+
+output "rds_endpoint" {
+  description = "Amazon RDS PostgreSQL endpoint"
+  value       = module.rds.endpoint
+}
