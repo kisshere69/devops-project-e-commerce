@@ -56,11 +56,22 @@ devops-project-e-commerce/
 │           └── navigation.js
 │
 ├── database/
-│   └── init.sql
+│   ├── migrations/         # schema
+│   ├── versions/           # source of truth
+│   │   └── 644cbbd0a5e2_initial_schema.py
+│   │
+│   ├── seed/               # initial data
+│   │   └──001_products.sql
+│   │
+│   ├── bootstrap/          # db bootstrap
+│   │   ├── Dockerfile      # db migration image
+│   │   └── bootstrap.py
+│   │
+│   └── init.sql            # db data for local testing
 │
 ├── terraform/
-│   ├── bakcend/
-│   ├── bootstrap/
+│   ├── bakcend/            # tfstate backend
+│   ├── bootstrap/          # AWS bootstrap
 │   ├── environments/
 │   └── modules/
 │       ├── vpc/
