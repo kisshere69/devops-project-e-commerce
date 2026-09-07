@@ -4,6 +4,8 @@
 
 This **DevOps** project represents a containerized e-commerce-style coffee shop **Flask** app backed by **PostgreSQL**. Users can browse products, manage a persistent shopping cart, and save products to a wishlist.
 
+The app is designed to run locally with **Docker Compose** and is being progressively deployed to the **AWS Cloud**. The public app is available through the custom domain `www.roast-and-co.online`.
+
 The project is designed as a **production-like** DevOps environment with **Docker**, **Kubernetes**, **AWS EKS**, **Terraform**, **CI/CD**, and **observability** introduced progressively.
 
 ---
