@@ -3,7 +3,7 @@ name: Database Migration Bootstrap
 on:
     # Uncomment when the workflow is ready
     # workflow_run:
-    #     workflows: ["Checks & Build & Push"]
+    #     workflows: ["Check, Build & Push application image"]
     #     types: [completed]
 
     workflow_dispatch:
