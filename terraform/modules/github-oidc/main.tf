@@ -63,7 +63,8 @@ data "aws_iam_policy_document" "ecr_push" {
     ]
 
     resources = [
-      "arn:aws:ecr:${var.region}:${data.aws_caller_identity.current.account_id}:repository/${var.repository}"
+      "arn:aws:ecr:${var.region}:${data.aws_caller_identity.current.account_id}:repository/${var.repository}",
+      "arn:aws:ecr:${var.region}:${data.aws_caller_identity.current.account_id}:repository/${var.db_migration_repository}"
     ]
   }
 }

@@ -57,3 +57,8 @@ variable "repository" {
   description = "The name of the ECR repository"
   type        = string
 }
+
+variable "db_migration_repository" {
+  description = "The name of the ECR repository for database migrations"
+  type        = string
+}
