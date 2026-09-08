@@ -1,0 +1,145 @@
+name: Database Migration Bootstrap
+
+on:
+    # Uncomment when the workflow is ready
+    # workflow_run:
+    #     workflows: ["Checks & Build & Push"]
+    #     types: [completed]
+
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+env:
+  AWS_REGION: eu-central-1
+  ECR_REPOSITORY: roast-co-db-migration
+
+jobs:
+    db-migration-test:
+        name: Database Migration Test
+
+        outputs:
+            image-tag: ${{ steps.image-tag.outputs.tag }}
+
+        if: >
+            github.event_name == 'workflow_dispatch' ||
+            github.event.workflow_run.conclusion == 'success'
+
+        runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:16.15-alpine
+                env:
+                    POSTGRES_DB: coffee_shop_test
+                    POSTGRES_USER: coffee
+                    POSTGRES_PASSWORD: coffee
+                ports:
+                    - 5432:5432
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+              with:
+                ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+            
+            - name: Set image tag
+              id: image-tag
+              env:
+                SOURCE_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+              run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+            - name: Show commit
+              run: |
+                echo "Current commit: $GITHUB_SHA"
+                echo "Image tag: ${{ steps.meta.outputs.tag }}"
+
+            - name: Build migration image with SHA tag
+              run: |
+                docker build \
+                -f database/bootstrap/Dockerfile \
+                -t roast-co-db-migration:${{ steps.meta.outputs.tag }} .
+
+            - name: Run test database migration bootstrap
+              env:
+                DATABASE_URL: postgresql+psycopg://coffee:coffee@localhost:5432/coffee_shop_test
+              run: |
+                docker run --rm \
+                 --network host \
+                 -e DATABASE_URL="$DATABASE_URL" \
+                 roast-co-db-migration:${{ steps.meta.outputs.tag }}
+
+            - name: Integration test of the migrated database.
+              env:
+                PGPASSWORD: coffee
+              run: |
+                echo "Checking Alembic version..."
+
+                VERSION=$(docker run --rm \
+                  --network host \
+                  -e PGPASSWORD=coffee \
+                  postgres:16.15-alpine \
+                psql \
+                    -h localhost \
+                    -p 5432 \
+                    -U coffee \
+                    -d coffee_shop_test \
+                    -c "SELECT version_num FROM alembic_version;")
+
+                echo "Alembic version: $VERSION"
+                test "$VERSION" = "644cbbd0a5e2"
+                
+                echo "Checking products count..."
+                PRODUCT_COUNT=$(docker run --rm \
+                  --network host \
+                  -e PGPASSWORD=coffee \
+                  postgres:16.15-alpine \
+                psql \
+                    -h localhost \
+                    -p 5432 \
+                    -U coffee \
+                    -d coffee_shop_test \
+                    -c "SELECT COUNT(*) FROM products;")
+
+                echo "Product count: $PRODUCT_COUNT"
+                test "$PRODUCT_COUNT" -eq 8
+
+                echo "Database migration verification passed!"
+
+
+    db-migration-push:
+        name: Push Database Migration Image
+        needs: db-migration-test
+        runs-on: ubuntu-latest
+
+        permissions:
+            id-token: write
+            contents: read
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+              with:
+                ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                role-to-assume: ${{ vars.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+                aws-region: ${{ env.AWS_REGION }}
+
+            - name: Verify AWS identity
+              run: aws sts get-caller-identity
+
+            - name: Login to ECR
+              id: ecr-login
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Build and push Docker image to ECR
+              env:
+                IMAGE_TAG: ${{ needs.db-migration-test.outputs.image-tag }}
+                REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+              run: |
+                docker build -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+                docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
