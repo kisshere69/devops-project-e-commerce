@@ -1,4 +1,4 @@
-name: Checks & Build & Push
+name: Check, Build & Push application image
 
 on:
   workflow_dispatch:
