@@ -77,6 +77,18 @@ module "ecr" {
   scan_on_push         = var.scan_on_push
 }
 
+module "ecr_db_migration" {
+  source = "../../modules/ecr"
+
+  project     = var.project
+  environment = var.environment
+  managed_by  = var.managed_by
+
+  repository           = var.db_migration_repository
+  image_tag_mutability = var.image_tag_mutability
+  scan_on_push         = var.scan_on_push
+}
+
 module "alb-controller" {
   source = "../../modules/alb-controller"
 
@@ -103,6 +115,7 @@ module "github-oidc" {
   github_oidc_subject      = var.github_oidc_subject
   github_oidc_provider_arn = var.github_oidc_provider_arn
   repository               = var.repository
+  db_migration_repository  = var.db_migration_repository
   project                  = var.project
   environment              = var.environment
   managed_by               = var.managed_by
