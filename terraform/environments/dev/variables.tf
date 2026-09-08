@@ -145,10 +145,10 @@ variable "az_b" {
   type        = string
 }
 
-# ECR
+# ECR for application image
 
 variable "repository" {
-  description = "The name of the ECR repository"
+  description = "The name of the ECR repository for application images"
   type        = string
 }
 
@@ -172,6 +172,13 @@ variable "scan_on_push" {
   description = "Enable image scanning on push"
   type        = bool
   default     = true
+}
+
+# ECR for database migration image
+
+variable "db_migration_repository" {
+  description = "The name of the ECR repository for database migration images"
+  type        = string
 }
 
 # ACM Certificate
