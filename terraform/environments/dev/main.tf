@@ -139,7 +139,6 @@ module "github-oidc" {
   cluster_arn  = module.eks.cluster_arn
 
   github_oidc_subject      = var.github_oidc_subject
-  github_oidc_provider_arn = var.github_oidc_provider_arn
   repository               = var.repository
   db_migration_repository  = var.db_migration_repository
   project                  = var.project

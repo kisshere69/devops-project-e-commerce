@@ -213,11 +213,6 @@ variable "github_repo" {
   type        = string
 }
 
-variable "github_oidc_provider_arn" {
-  description = "The ARN of the GitHub OIDC provider."
-  type        = string
-}
-
 variable "github_oidc_subject" {
   description = "The subject of the GitHub OIDC provider."
   type        = string
