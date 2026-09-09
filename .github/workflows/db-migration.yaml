@@ -80,7 +80,7 @@ jobs:
                   --network host \
                   -e PGPASSWORD=coffee \
                   postgres:16.15-alpine \
-                psql \
+                  psql \
                     -h localhost \
                     -p 5432 \
                     -U coffee \
@@ -89,13 +89,14 @@ jobs:
 
                 echo "Alembic version: $VERSION"
                 test "$VERSION" = "644cbbd0a5e2"
-                
+
                 echo "Checking products count..."
+
                 PRODUCT_COUNT=$(docker run --rm \
                   --network host \
                   -e PGPASSWORD=coffee \
                   postgres:16.15-alpine \
-                psql \
+                  psql \
                     -h localhost \
                     -p 5432 \
                     -U coffee \
