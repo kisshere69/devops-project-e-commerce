@@ -12,6 +12,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 4.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
   }
 }
 
@@ -140,7 +144,6 @@ module "rds" {
 
   db_name     = var.db_name
   db_username = var.db_username
-  db_password = var.db_password
 
   instance_class    = var.instance_class
   allocated_storage = var.allocated_storage
