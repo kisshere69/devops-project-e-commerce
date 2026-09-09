@@ -2,10 +2,9 @@ from database import get_db_connection
 
 
 def add_cart_item(cart_id, product_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 INSERT INTO cart_items (
                     cart_id,
                     product_id,
@@ -17,17 +16,17 @@ def add_cart_item(cart_id, product_id):
                 DO UPDATE
                 SET quantity = cart_items.quantity + 1;
                 """,
-                (
-                    cart_id,
-                    product_id,
-                ),
-            )
+            (
+                cart_id,
+                product_id,
+            ),
+        )
+
 
 def get_cart_items(cart_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 SELECT
                     ci.product_id,
                     p.name,
@@ -42,10 +41,10 @@ def get_cart_items(cart_id):
                 WHERE ci.cart_id = %s
                 ORDER BY ci.id;
                 """,
-                (cart_id,),
-            )
+            (cart_id,),
+        )
 
-            rows = cursor.fetchall()
+        rows = cursor.fetchall()
 
     return [
         {
@@ -60,11 +59,11 @@ def get_cart_items(cart_id):
         for row in rows
     ]
 
+
 def get_cart_total(cart_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 SELECT
                     COALESCE(
                         SUM(p.price * ci.quantity),
@@ -75,18 +74,18 @@ def get_cart_total(cart_id):
                     ON p.id = ci.product_id
                 WHERE ci.cart_id = %s;
                 """,
-                (cart_id,),
-            )
+            (cart_id,),
+        )
 
-            row = cursor.fetchone()
+        row = cursor.fetchone()
 
     return row[0]
 
+
 def get_cart_count(cart_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 SELECT
                     COALESCE(
                         SUM(quantity),
@@ -95,82 +94,82 @@ def get_cart_count(cart_id):
                 FROM cart_items
                 WHERE cart_id = %s;
                 """,
-                (cart_id,),
-            )
+            (cart_id,),
+        )
 
-            row = cursor.fetchone()
+        row = cursor.fetchone()
 
     return row[0]
 
+
 def increase_cart_item(cart_id, product_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 UPDATE cart_items
                 SET quantity = quantity + 1
                 WHERE cart_id = %s
                   AND product_id = %s;
                 """,
-                (
-                    cart_id,
-                    product_id,
-                ),
-            )
+            (
+                cart_id,
+                product_id,
+            ),
+        )
+
 
 def decrease_cart_item(cart_id, product_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 UPDATE cart_items
                 SET quantity = quantity - 1
                 WHERE cart_id = %s
                   AND product_id = %s
                   AND quantity > 1;
                 """,
-                (
-                    cart_id,
-                    product_id,
-                ),
-            )
+            (
+                cart_id,
+                product_id,
+            ),
+        )
 
-            if cursor.rowcount == 0:
-                cursor.execute(
-                    """
+        if cursor.rowcount == 0:
+            cursor.execute(
+                """
                     DELETE FROM cart_items
                     WHERE cart_id = %s
                       AND product_id = %s
                       AND quantity = 1;
                     """,
-                    (
-                        cart_id,
-                        product_id,
-                    ),
-                )
-
-def remove_cart_item(cart_id, product_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
-                DELETE FROM cart_items
-                WHERE cart_id = %s
-                  AND product_id = %s;
-                """,
                 (
                     cart_id,
                     product_id,
                 ),
             )
 
+
+def remove_cart_item(cart_id, product_id):
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
+                DELETE FROM cart_items
+                WHERE cart_id = %s
+                  AND product_id = %s;
+                """,
+            (
+                cart_id,
+                product_id,
+            ),
+        )
+
+
 def clear_cart(cart_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 DELETE FROM cart_items
                 WHERE cart_id = %s;
                 """,
-                (cart_id,),
-            )
+            (cart_id,),
+        )

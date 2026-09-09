@@ -1,5 +1,6 @@
 from database import get_db_connection
 
+
 def add_wishlist_item(wishlist_id, product_id):
     connection = get_db_connection()
 
@@ -59,6 +60,7 @@ def get_wishlist_items(wishlist_id):
     finally:
         connection.close()
 
+
 def get_wishlist_count(wishlist_id):
     connection = get_db_connection()
 
@@ -78,6 +80,7 @@ def get_wishlist_count(wishlist_id):
 
     finally:
         connection.close()
+
 
 def remove_wishlist_item(wishlist_id, product_id):
     connection = get_db_connection()

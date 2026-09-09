@@ -1,38 +1,42 @@
-import os, uuid, logging, time
+import logging
+import os
+import time
+import uuid
 
+import psycopg
 from flask import (
     Flask,
+    Response,
     flash,
+    g,
     jsonify,
     redirect,
     render_template,
+    request,
     session,
     url_for,
-    g,
-    request,
-    Response,
 )
-from database import get_db_connection
-from repositories.product_repository import get_product, get_products
+from logging_config import configure_logging
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 from repositories.cart_repository import (
     add_cart_item,
+    clear_cart,
+    decrease_cart_item,
     get_cart_count,
     get_cart_items,
     get_cart_total,
-    clear_cart,
     increase_cart_item,
-    decrease_cart_item,
     remove_cart_item,
 )
+from repositories.product_repository import get_product, get_products
 from repositories.wishlist_repository import (
     add_wishlist_item,
-    get_wishlist_items,
     get_wishlist_count,
+    get_wishlist_items,
     remove_wishlist_item,
 )
 
-from logging_config import configure_logging
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from database import get_db_connection
 
 configure_logging()
 
@@ -41,17 +45,16 @@ logger.info("Application started")
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = os.getenv(
-    "SECRET_KEY",
-    "dev-secret-key"
-)
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
 
 # Logging and request tracking
+
 
 @app.before_request
 def start_request_timer():
     g.request_start_time = time.perf_counter()
     g.request_id = str(uuid.uuid4())
+
 
 @app.after_request
 def log_request(response):
@@ -77,15 +80,15 @@ def log_request(response):
         ).inc()
 
         HTTP_REQUEST_DURATION_SECONDS.labels(
-        method=request.method,
-        path=route,
+            method=request.method,
+            path=route,
         ).observe(duration_ms / 1000)
 
     # Structured logs
 
     if is_static or request.path in excluded_paths:
         return response
-    
+
     logger.info(
         "Request completed",
         extra={
@@ -99,7 +102,9 @@ def log_request(response):
 
     return response
 
+
 # Metrics
+
 
 @app.route("/metrics")
 def metrics():
@@ -108,7 +113,9 @@ def metrics():
         mimetype=CONTENT_TYPE_LATEST,
     )
 
+
 # Home
+
 
 @app.route("/")
 def home():
@@ -119,22 +126,29 @@ def home():
         products=products,
     )
 
+
 # Products
+
 
 @app.route("/api/products/<int:product_id>")
 def product_api(product_id):
     product = get_product(product_id)
 
     if product is None:
-        return jsonify(
-            {
-                "error": "Product not found",
-            }
-        ), 404
+        return (
+            jsonify(
+                {
+                    "error": "Product not found",
+                }
+            ),
+            404,
+        )
 
     return jsonify(product)
 
+
 # Cart
+
 
 @app.route("/cart")
 def cart():
@@ -149,11 +163,7 @@ def cart():
 
     products = get_products()
 
-    recommended_products = [
-        product
-        for product in products
-        if product["available"]
-    ][:3]
+    recommended_products = [product for product in products if product["available"]][:3]
 
     return render_template(
         "cart.html",
@@ -169,11 +179,11 @@ def get_cart_id():
 
     return session["cart_id"]
 
+
 @app.route(
     "/cart/add/<int:product_id>",
     methods=["POST"],
 )
-
 def add_to_cart(product_id):
     product = get_product(product_id)
 
@@ -195,34 +205,26 @@ def add_to_cart(product_id):
         "cart",
     )
 
-    return redirect(
-        request.referrer or url_for("home")
-    )
+    return redirect(request.referrer or url_for("home"))
 
 
 # Wishlist and Cart items counter
+
 
 @app.context_processor
 def inject_header_counts():
     cart_id = session.get("cart_id")
     wishlist_id = session.get("wishlist_id")
 
-    cart_count = (
-        get_cart_count(cart_id)
-        if cart_id
-        else 0
-    )
+    cart_count = get_cart_count(cart_id) if cart_id else 0
 
-    wishlist_count = (
-        get_wishlist_count(wishlist_id)
-        if wishlist_id
-        else 0
-    )
+    wishlist_count = get_wishlist_count(wishlist_id) if wishlist_id else 0
 
     return {
         "cart_count": cart_count,
         "wishlist_count": wishlist_count,
     }
+
 
 @app.route(
     "/cart/clear",
@@ -235,6 +237,7 @@ def clear_cart_route():
         clear_cart(cart_id)
 
     return redirect(url_for("cart"))
+
 
 @app.route(
     "/cart/increase/<int:product_id>",
@@ -267,6 +270,7 @@ def decrease_cart_product(product_id):
 
     return redirect(url_for("cart"))
 
+
 @app.route(
     "/cart/remove/<int:product_id>",
     methods=["POST"],
@@ -282,7 +286,9 @@ def remove_cart_product(product_id):
 
     return redirect(url_for("cart"))
 
+
 # Wishlist
+
 
 @app.route("/wishlist")
 def wishlist():
@@ -298,11 +304,13 @@ def wishlist():
         wishlist_items=wishlist_items,
     )
 
+
 def get_wishlist_id():
     if "wishlist_id" not in session:
         session["wishlist_id"] = str(uuid.uuid4())
 
     return session["wishlist_id"]
+
 
 @app.route("/wishlist/add/<int:product_id>", methods=["POST"])
 def add_to_wishlist(product_id):
@@ -323,9 +331,8 @@ def add_to_wishlist(product_id):
         "wishlist",
     )
 
-    return redirect(
-        request.referrer or url_for("home")
-    )
+    return redirect(request.referrer or url_for("home"))
+
 
 @app.route("/wishlist/remove/<int:product_id>", methods=["POST"])
 def remove_from_wishlist(product_id):
@@ -339,7 +346,9 @@ def remove_from_wishlist(product_id):
 
     return redirect(url_for("wishlist"))
 
+
 # App health checks
+
 
 @app.route("/health")
 def health():
@@ -349,13 +358,13 @@ def health():
         }
     )
 
+
 @app.route("/health/db")
 def database_health():
     try:
-        with get_db_connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT 1;")
-                result = cursor.fetchone()
+        with get_db_connection() as connection, connection.cursor() as cursor:
+            cursor.execute("SELECT 1;")
+            result = cursor.fetchone()
 
         return jsonify(
             {
@@ -365,14 +374,18 @@ def database_health():
             }
         )
 
-    except Exception as error:
-        return jsonify(
-            {
-                "status": "unhealthy",
-                "database": "unreachable",
-                "error": str(error),
-            }
-        ), 500
+    except psycopg.Error as error:
+        return (
+            jsonify(
+                {
+                    "status": "unhealthy",
+                    "database": "unreachable",
+                    "error": str(error),
+                }
+            ),
+            500,
+        )
+
 
 # Metrics
 

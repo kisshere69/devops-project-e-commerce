@@ -2,6 +2,7 @@ import json
 import logging
 from datetime import datetime, timezone
 
+
 class CustomJsonFormatter(logging.Formatter):
     def format(self, record):
         log_record = {
@@ -24,6 +25,7 @@ class CustomJsonFormatter(logging.Formatter):
                 log_record[field] = getattr(record, field)
 
         return json.dumps(log_record)
+
 
 def configure_logging():
     handler = logging.StreamHandler()

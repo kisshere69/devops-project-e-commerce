@@ -1,10 +1,9 @@
 from database import get_db_connection
 
+
 def get_products():
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute("""
                 SELECT
                     id,
                     name,
@@ -15,10 +14,9 @@ def get_products():
                     image
                 FROM products
                 ORDER BY id;
-                """
-            )
+                """)
 
-            rows = cursor.fetchall()
+        rows = cursor.fetchall()
 
     return [
         {
@@ -35,10 +33,9 @@ def get_products():
 
 
 def get_product(product_id):
-    with get_db_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                """
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
                 SELECT
                     id,
                     name,
@@ -50,10 +47,10 @@ def get_product(product_id):
                 FROM products
                 WHERE id = %s;
                 """,
-                (product_id,),
-            )
+            (product_id,),
+        )
 
-            row = cursor.fetchone()
+        row = cursor.fetchone()
 
     if row is None:
         return None
