@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: roast-co-app
-        image: 215229808174.dkr.ecr.eu-central-1.amazonaws.com/roast-co-app:v1
+        image: 215229808174.dkr.ecr.eu-central-1.amazonaws.com/roast-co-app:<replace-me>
         resources:
           limits:
             memory: "128Mi"
@@ -44,27 +44,27 @@ spec:
         - secretRef:
             name: roast-co-secret
 
-      startupProbe:
-        httpGet:
-          path: /health
-          port: 5000
-        failureThreshold: 5
-        periodSeconds: 12
+      # startupProbe:
+      #   httpGet:
+      #     path: https://www.roast-and-co.online
+      #     port: 5000
+      #   failureThreshold: 5
+      #   periodSeconds: 12
 
-      livenessProbe:
-        httpGet:
-          path: /health
-          port: 5000
-        periodSeconds: 10
-        timeoutSeconds: 2
-        failureThreshold: 3
-        successThreshold: 1
+      # livenessProbe:
+      #   httpGet:
+      #     path: https://www.roast-and-co.online/health
+      #     port: 5000
+      #   periodSeconds: 10
+      #   timeoutSeconds: 2
+      #   failureThreshold: 3
+      #   successThreshold: 1
 
-      readinessProbe:
-        httpGet:
-          path: /health/db
-          port: 5000
-        periodSeconds: 5
-        timeoutSeconds: 3
-        failureThreshold: 3
-        successThreshold: 1
+      # readinessProbe:
+      #   httpGet:
+      #     path: https://www.roast-and-co.online/health/db
+      #     port: 5000
+      #   periodSeconds: 5
+      #   timeoutSeconds: 3
+      #   failureThreshold: 3
+      #   successThreshold: 1
