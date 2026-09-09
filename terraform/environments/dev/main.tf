@@ -138,13 +138,13 @@ module "github-oidc" {
   cluster_name = var.cluster_name
   cluster_arn  = module.eks.cluster_arn
 
-  github_oidc_subject      = var.github_oidc_subject
-  repository               = var.repository
-  db_migration_repository  = var.db_migration_repository
-  project                  = var.project
-  environment              = var.environment
-  managed_by               = var.managed_by
-  region                   = var.region
+  github_oidc_subject     = var.github_oidc_subject
+  repository              = var.repository
+  db_migration_repository = var.db_migration_repository
+  project                 = var.project
+  environment             = var.environment
+  managed_by              = var.managed_by
+  region                  = var.region
 
   depends_on = [
     module.eks
