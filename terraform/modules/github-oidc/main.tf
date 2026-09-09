@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
       type = "Federated"
 
       identifiers = [
-        var.github_oidc_provider_arn
+        aws_iam_openid_connect_provider.github.arn
       ]
     }
 
@@ -34,6 +34,16 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
       ]
     }
   }
+}
+
+resource "aws_iam_openid_connect_provider" "github" {
+  url = "https://token.actions.githubusercontent.com"
+
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+
+  tags = local.common_tags
 }
 
 # ECR permissions required by GitHub Actions
