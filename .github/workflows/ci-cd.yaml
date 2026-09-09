@@ -78,13 +78,16 @@ jobs:
 
       - name: Install lint/test tooling
         run: |
-          pip install flake8 bandit pip-audit
+          pip install ruff bandit pip-audit
 
       - name: Audit Python dependencies
         run: pip-audit
 
-      - name: Lint Python code
-        run: flake8 app
+      - name: Format Python code with Ruff
+        run: ruff format --check app
+
+      - name: Lint Python code with Ruff
+        run: ruff check app
 
       - name: Compile Python files
         run: python -m compileall app
