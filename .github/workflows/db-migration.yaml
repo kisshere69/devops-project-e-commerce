@@ -85,7 +85,7 @@ jobs:
                     -p 5432 \
                     -U coffee \
                     -d coffee_shop_test \
-                    -c "SELECT version_num FROM alembic_version;")
+                    -tAc "SELECT version_num FROM alembic_version;")
 
                 echo "Alembic version: $VERSION"
                 test "$VERSION" = "644cbbd0a5e2"
@@ -100,7 +100,7 @@ jobs:
                     -p 5432 \
                     -U coffee \
                     -d coffee_shop_test \
-                    -c "SELECT COUNT(*) FROM products;")
+                    -tAc "SELECT COUNT(*) FROM products;")
 
                 echo "Product count: $PRODUCT_COUNT"
                 test "$PRODUCT_COUNT" -eq 8
