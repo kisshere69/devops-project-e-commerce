@@ -36,11 +36,6 @@ variable "cluster_arn" {
 
 # GitHub OIDC
 
-variable "github_oidc_provider_arn" {
-  description = "ARN of the GitHub OIDC provider"
-  type        = string
-}
-
 variable "github_oidc_subject" {
   description = "Subject of the GitHub OIDC provider"
   type        = string
