@@ -53,13 +53,13 @@ jobs:
             - name: Show commit
               run: |
                 echo "Current commit: $GITHUB_SHA"
-                echo "Image tag: ${{ steps.meta.outputs.tag }}"
+                echo "Image tag: ${{ steps.image-tag.outputs.tag }}"
 
             - name: Build migration image with SHA tag
               run: |
                 docker build \
                 -f database/bootstrap/Dockerfile \
-                -t roast-co-db-migration:${{ steps.meta.outputs.tag }} .
+                -t roast-co-db-migration: ${{ steps.image-tag.outputs.tag }} .
 
             - name: Run test database migration bootstrap
               env:
@@ -68,7 +68,7 @@ jobs:
                 docker run --rm \
                  --network host \
                  -e DATABASE_URL="$DATABASE_URL" \
-                 roast-co-db-migration:${{ steps.meta.outputs.tag }}
+                 roast-co-db-migration: ${{ steps.image-tag.outputs.tag }}
 
             - name: Integration test of the migrated database.
               env:
