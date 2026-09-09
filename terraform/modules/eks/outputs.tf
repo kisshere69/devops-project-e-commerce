@@ -41,3 +41,8 @@ output "cluster_security_group_id" {
   description = "EKS cluster security group ID"
   value       = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
 }
+
+output "cluster_ca_certificate" {
+  description = "EKS cluster CA certificate"
+  value       = aws_eks_cluster.this.certificate_authority[0].data
+}
