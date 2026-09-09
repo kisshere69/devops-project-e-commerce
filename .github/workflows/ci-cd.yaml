@@ -51,10 +51,13 @@ jobs:
         run: docker build -t roast-co-app:ci .
 
       - name: Image scan for vulnerabilities
-        run:
-            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-            aquasec/trivy:latest image --severity HIGH,CRITICAL roast-co-app:ci
-
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:latest \
+            image \
+            --severity HIGH,CRITICAL \
+            roast-co-app:ci
 
   app-checks:
     name: Application Checks
