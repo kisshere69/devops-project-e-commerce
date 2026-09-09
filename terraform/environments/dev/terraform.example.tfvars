@@ -36,8 +36,8 @@ domain_name               = "roast-and-co.online"
 subject_alternative_names = ["www.roast-and-co.online"]
 cloudflare_zone_id        = "value"
 
-github_repo              = "kisshere69/devops-project-e-commerce"
-github_oidc_subject      = "repo:kisshere69/devops-project-e-commerce:"
+github_repo         = "kisshere69/devops-project-e-commerce"
+github_oidc_subject = "repo:kisshere69/devops-project-e-commerce"
 
 db_name           = "coffee_shop"
 db_username       = "roast_admin"
