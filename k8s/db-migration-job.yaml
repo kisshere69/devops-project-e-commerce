@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration
+  namespace: dev
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      serviceAccountName: db-migration
+      restartPolicy: Never
+      
+      containers:
+        - name: db-migration
+          image: <ECR_REGISTRY>/roast-co-db-migration:<git-sha>
+          volumeMounts:
+            - name: secrets-store
+              mountPath: /mnt/secrets-store
+              readOnly: true
+
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: db-secret
