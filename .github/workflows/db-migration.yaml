@@ -142,5 +142,8 @@ jobs:
                 IMAGE_TAG: ${{ needs.db-migration-test.outputs.image-tag }}
                 REGISTRY: ${{ steps.ecr-login.outputs.registry }}
               run: |
-                docker build -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+                docker build \
+                  -f database/bootstrap/Dockerfile \
+                  -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+                  .
                 docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
