@@ -80,3 +80,17 @@ VALUES
         FALSE,
         'images/unavailable brownie.png'
     )
+
+ON CONFLICT (id) DO UPDATE
+SET
+    name = EXCLUDED.name,
+    category = EXCLUDED.category,
+    price = EXCLUDED.price,
+    description = EXCLUDED.description,
+    available = EXCLUDED.available,
+    image = EXCLUDED.image;
+
+SELECT setval(
+    pg_get_serial_sequence('products', 'id'),
+    COALESCE((SELECT MAX(id) FROM products), 1)
+);
