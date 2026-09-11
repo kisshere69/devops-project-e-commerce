@@ -16,4 +16,8 @@ else:
 
 
 def get_db_connection():
-    return psycopg.connect(DATABASE_URL)
+    database_url = DATABASE_URL.replace(
+        "postgresql+psycopg://",
+        "postgresql://",
+    )
+    return psycopg.connect(database_url)
