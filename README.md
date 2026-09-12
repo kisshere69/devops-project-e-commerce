@@ -56,37 +56,44 @@ devops-project-e-commerce/
 │           └── navigation.js
 │
 ├── database/
-│   ├── migrations/         # schema
-│   ├── versions/           # source of truth
+│   ├── migrations/                             # schema
+│   ├── versions/                               # source of truth
 │   │   └── 644cbbd0a5e2_initial_schema.py
 │   │
-│   ├── seed/               # initial data
+│   ├── seed/                                   # initial data
 │   │   └──001_products.sql
 │   │
-│   ├── bootstrap/          # db bootstrap
-│   │   ├── Dockerfile      # db migration image
+│   ├── bootstrap/                              # db bootstrap
+│   │   ├── Dockerfile                          # db migration image
 │   │   └── bootstrap.py
 │   │
-│   └── init.sql            # db data for local testing
+│   └── init.sql                                # db data for local testing
 │
 ├── terraform/
-│   ├── bakcend/            # tfstate backend
-│   ├── bootstrap/          # AWS bootstrap
+│   ├── bakcend/                                # tfstate backend
+│   ├── bootstrap/                              # AWS bootstrap
 │   ├── environments/
+│   │   └── dev/
+│   │
 │   └── modules/
 │       ├── vpc/
 │       ├── ecr/
 │       ├── eks/
+│       ├── rds/
 │       ├── acm-certificate/
 │       └── alb-controller/
 │
 ├── k8s/
 │   ├── namespace.yaml
+│   ├── service-account.yaml
+│   ├── db-migration-serviceaccount.yaml
+│   ├── db-secret-provider.yaml
+│   ├── db-migration-job.yaml
+│   ├── configmap.yaml
+│   ├── secret.yaml
 │   ├── deployment.yaml
 │   ├── service.yaml
 │   ├── ingress.yaml
-│   ├── configmap.yaml
-│   ├── secret.yaml
 │   └── hpa.yaml
 │
 ├── load-testing/
@@ -107,6 +114,11 @@ devops-project-e-commerce/
 │           │
 │           └── datasources/
 │               └── datasource.yml
+│
+├── .github/
+│   └── workflows/
+│       ├── ci-cd.yaml
+│       └── db-migration.yaml
 │
 ├── Dockerfile
 ├── docker-compose.yaml
