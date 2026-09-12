@@ -29,7 +29,7 @@ spec:
       serviceAccountName: roast-co-app
       containers:
       - name: roast-co-app
-        image: 215229808174.dkr.ecr.eu-central-1.amazonaws.com/roast-co-app:<replace-me>
+        image: 215229808174.dkr.ecr.eu-central-1.amazonaws.com/roast-co-app:<commit-SHA>
         resources:
           limits:
             memory: "128Mi"
