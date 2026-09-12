@@ -219,6 +219,226 @@ Cloudflare
    └── www.roast-and-co.online ──► Cloudflare Tunnel
 ```
 
+## Proof of Concept
+
+The PoC demonstrates that the project can provision AWS infrastructure, deploy the application to EKS, connect the application to Amazon RDS PostgreSQL, expose the application through an AWS ALB, and subsequently destroy the environment using Terraform.
+
+### Terraform Infrastructure
+
+The EKS environment was successfully created with:
+```bash
+EKS Cluster:        roast-co-dev
+AWS Region:         eu-central-1
+Kubernetes Version: 1.36
+Worker Node Group:  general
+Desired Nodes:      2
+Minimum Nodes:      1
+Maximum Nodes:      3
+Instance Type:      t3.small
+```
+
+Terraform successfully produced a clean deployment plan:
+
+`Plan: 59 to add, 0 to change, 0 to destroy.`
+
+The infrastructure included:
+```text
+VPC
+├── Public Subnets
+├── Private Subnets
+├── Internet Gateway
+├── NAT Gateway
+└── Route Tables
+
+EKS
+├── Control Plane
+├── Managed Node Group
+└── Kubernetes system components
+
+ECR
+RDS PostgreSQL
+AWS Secrets Manager
+IAM
+ACM
+AWS Load Balancer Controller
+```
+
+### EKS Cluster Validation
+
+The EKS cluster successfully reached the ACTIVE state:
+```bash
+$ aws eks describe-cluster \
+    --name roast-co-dev \
+    --region eu-central-1
+
+Status:  ACTIVE
+Version: 1.36
+```
+
+Kubernetes access was then verified:
+```bash
+$ kubectl get nodes
+
+NAME                                           STATUS   ROLES    AGE   VERSION
+ip-10-0-11-22.eu-central-1.compute.internal    Ready    <none>   18m   v1.36.3-eks-cb19647
+ip-10-0-12-221.eu-central-1.compute.internal   Ready    <none>   18m   v1.36.3-eks-cb19647
+```
+Both worker nodes reached the `Ready` state.
+
+The nodes were distributed across the configured private subnets/Availability Zones.
+
+### Kubernetes System Components
+
+The EKS system workloads were successfully validated:
+```bash
+$ kubectl get pods -A
+
+NAMESPACE     NAME                             READY   STATUS    RESTARTS
+kube-system   aws-node-hgq7m                   2/2     Running   0
+kube-system   aws-node-ldm7q                   2/2     Running   0
+kube-system   coredns-c4b9957df-p885w          1/1     Running   0
+kube-system   coredns-c4b9957df-vqp7c          1/1     Running   0
+kube-system   eks-pod-identity-agent-dkhrt     1/1     Running   0
+kube-system   eks-pod-identity-agent-nt9rp     1/1     Running   0
+kube-system   kube-proxy-fq2ff                 1/1     Running   0
+kube-system   kube-proxy-jqks9                 1/1     Running   0
+kube-system   secrets-store-csi-driver-qx628   3/3     Running   0
+kube-system   secrets-store-csi-driver-rq99v   3/3     Running   0
+```
+
+This validated the operation of:
+
+- Amazon VPC CNI
+- CoreDNS
+- kube-proxy
+- EKS Pod Identity Agent
+- Secrets Store CSI Driver
+
+
+### EKS Pod Identity
+
+AWS Pod Identity associations were verified:
+```bash
+$ aws eks list-pod-identity-associations \
+    --region eu-central-1 \
+    --cluster-name roast-co-dev
+
+namespace       serviceAccount
+dev             db-migration
+kube-system     alb-controller
+kube-system     aws-node
+```
+
+Different Kubernetes workloads therefore used dedicated IAM roles.
+
+The application workload also used its own Kubernetes ServiceAccount - `roast-co-app` to provide the application with access to the required AWS resources.
+
+```bash
+$ kubectl get serviceaccount roast-co-app -n dev 
+NAME              AGE
+roast-co-app      6s
+```
+
+### AWS Secrets Manager and CSI
+
+The RDS credentials were stored in AWS Secrets Manager:
+
+```bash
+Name:
+roast-co-dev-rds-credentials
+
+Status:
+AWSCURRENT
+```
+The credentials were delivered to Kubernetes using:
+
+```text
+AWS Secrets Manager
+        │
+        ▼
+EKS Pod Identity
+        │
+        ▼
+Secrets Store CSI Driver
+        │
+        ▼
+Mounted secret file
+        │
+        ▼
+Application / Migration Job
+```
+
+Therefore, database connection was not hard-coded into the Kubernetes Deployment.
+
+The Secrets Store CSI Driver was successfully running inside the EKS cluster.
+
+### Database Migration
+
+The PostgreSQL database schema was managed using Alembic.
+
+The Kubernetes migration Job successfully executed:
+
+```bash
+$ kubectl get jobs -n dev
+
+NAME            COMPLETIONS   DURATION   AGE
+db-migration    1/1           6s         50m
+```
+
+The seed script was made idempotent so that the database bootstrap process could safely be retried:
+
+```sql
+ON CONFLICT (id) DO UPDATE
+
+SET
+    name = EXCLUDED.name,
+    category = EXCLUDED.category,
+    price = EXCLUDED.price,
+    description = EXCLUDED.description,
+    available = EXCLUDED.available,
+    image = EXCLUDED.image;
+```
+
+### Application Deployment
+
+The Flask application was deployed to EKS with 2 replicas:
+
+```bash
+$ kubectl get deploy -n dev
+
+NAME        READY    UP-TO-DATE   AVAILABLE   AGE
+roast-co    2/2      2            2           25m
+
+$ kubectl get pods -n dev
+
+NAME                         READY    STATUS      RESTARTS   AGE
+db-migration-mkpkt           0/1      Completed      0       54m
+roast-co-644976cbf7-6jznb    1/1      Running        0       25m
+roast-co-644976cbf7-d4ml9    1/1      Running        0       25m
+```
+
+### External Access
+
+The Flask application was exposed externally through a Kubernetes Ingress managed by the AWS ALB.
+
+The Ingress was configured with:
+
+- **Ingress class:** `alb`
+- **Host:** `roast-and-co.online`
+- **Load balancer:** AWS Application Load Balancer
+- **Listener:** HTTP/HTTPS
+- **Target type:** IP
+- **TLS:** AWS ACM certificate
+
+The Kubernetes Ingress was successfully created and associated with the application domain:
+
+```bash
+$ kubectl get ingress -n dev
+
+NAME                    CLASS   HOSTS                 ADDRESS   PORTS
+roast-co-dev-ingress    alb     roast-and-co.online   ...       80
+```
+
 ## Project status
 
 Work in progress
