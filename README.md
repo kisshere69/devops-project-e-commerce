@@ -120,6 +120,9 @@ devops-project-e-commerce/
 │       ├── ci-cd.yaml
 │       └── db-migration.yaml
 │
+├── docs/
+│   └──troubleshooting-incidents-log.md
+│
 ├── Dockerfile
 ├── docker-compose.yaml
 ├── .dockerignore
