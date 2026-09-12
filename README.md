@@ -195,15 +195,28 @@ www.roast-and-co.online
 ## AWS Runtime Architecture
 
 ```text
-www.roast-and-co.online
-        ↓
-    Cloudflare
-        ↓
-    Amazon ALB
-        ↓
-     AWS EKS
-        ↓
- Flask Pods → Amazon RDS PostgreSQL
+Internet
+   │
+   ▼
+Cloudflare
+   │
+   ├── roast-and-co.online ──► Amazon ALB
+   │                              │
+   │                              ▼
+   │                           AWS EKS
+   │                              │
+   │                    ┌─────────┴─────────┐
+   │                    │                   │
+   │                 Flask Pod           Flask Pod
+   │                    │                   │
+   │                    └─────────┬─────────┘
+   │                              │
+   │                     PostgreSQL connection
+   │                              │
+   │                              ▼
+   │                       Amazon RDS PostgreSQL
+   │
+   └── www.roast-and-co.online ──► Cloudflare Tunnel
 ```
 
 ## Project status
