@@ -1,0 +1,7 @@
+apiVersion: v2
+name: roast-co
+description: A Helm chart for deploying a Flask application to EKS
+type: application
+
+version: 0.1.0
+appVersion: 1.0.0
