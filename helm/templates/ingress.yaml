@@ -24,7 +24,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ include "roast-co.fullname" . }}
+              name: {{ include "roast-co.fullname" . }}-service
               port:
                 number: {{ .Values.service.port }}
 
