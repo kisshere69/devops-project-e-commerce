@@ -32,19 +32,15 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
-              with:
-                ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
             
             - name: Set image tag
               id: image-tag
-              env:
-                SOURCE_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
-              run: echo "tag=${SOURCE_SHA::7}" >> "$GITHUB_OUTPUT"
+              run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
             - name: Show commit
               run: |
-                echo "Current commit: $SOURCE_SHA"
-                echo "Image tag:${{ steps.image-tag.outputs.tag }}"
+                echo "Current commit: $GITHUB_SHA"
+                echo "Image tag: ${{ steps.image-tag.outputs.tag }}"
 
             - name: Build migration image with SHA tag
               run: |
@@ -70,6 +66,19 @@ jobs:
                 severity: 'CRITICAL, HIGH'
                 vuln-type: 'os,library'
                 ignore-unfixed: true
+
+            - name: Save migration image
+              run: |
+                docker save \
+                  roast-co-db-migration:${{ steps.image-tag.outputs.tag }} \
+                  -o migration-image.tar
+
+            - name: Upload migration image
+              uses: actions/upload-artifact@v7
+              with:
+                name: migration-image
+                path: migration-image.tar
+                retention-days: 1
 
             - name: Integration test of the migrated database.
               env:
@@ -120,11 +129,6 @@ jobs:
             contents: read
 
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v7
-              with:
-                ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
-
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v6
               with:
@@ -138,13 +142,22 @@ jobs:
               id: ecr-login
               uses: aws-actions/amazon-ecr-login@v2
 
-            - name: Build and push Docker image to ECR
+            - name: Download migration image
+              uses: actions/download-artifact@v5
+              with:
+                name: migration-image
+
+            - name: Load migration image
+              run: docker load -i migration-image.tar
+
+            - name: Tag migration image and push it to ECR
               env:
                 IMAGE_TAG: ${{ needs.db-migration-test.outputs.image-tag }}
                 REGISTRY: ${{ steps.ecr-login.outputs.registry }}
               run: |
-                docker build \
-                  -f database/bootstrap/Dockerfile \
-                  -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
-                  .
-                docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+                docker tag \
+                  roast-co-db-migration:$IMAGE_TAG \
+                  $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+                docker push \
+                  $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
