@@ -96,6 +96,13 @@ devops-project-e-commerce/
 │   ├── ingress.yaml
 │   └── hpa.yaml
 │
+├── helm/
+│   ├── templates/                        # application deployment
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   └── values-dev.yaml
+│
+│
 ├── load-testing/
 │   └── k6/
 │       └── smoke.js
