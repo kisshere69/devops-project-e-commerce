@@ -58,3 +58,9 @@ ingress:
   enabled: true
   host: roast-and-co.online
   certificateArn: ""
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  averageUtilization: 70
