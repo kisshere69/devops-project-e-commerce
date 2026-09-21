@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY app/requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    && rm -rf /usr/local/lib/python3.13/site-packages/pip \
+              /usr/local/lib/python3.13/site-packages/pip-*.dist-info
 
 COPY alembic.ini .
 
