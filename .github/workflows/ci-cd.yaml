@@ -10,6 +10,7 @@ permissions:
 env:
   AWS_REGION: eu-central-1
   ECR_REPOSITORY: roast-co-app
+  EKS_CLUSTER_NAME: roast-co-dev
 
 jobs:
   terraform-checks:
@@ -147,3 +148,60 @@ jobs:
         run: |
           docker build -t $REGISTRY/$ECR_REPOSITORY:${{ steps.meta.outputs.tag }} .
           docker push $REGISTRY/$ECR_REPOSITORY:${{ steps.meta.outputs.tag }}
+
+  deploy:
+    name: Deploy App with Helm
+
+    needs: build-and-push
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure EKS kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --region "$AWS_REGION" \
+            --name "$EKS_CLUSTER_NAME"
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v5
+
+      - name: Get ACM certificate ARN
+        id: acm
+        run: |
+          CERTIFICATE_ARN = "$(aws acm list-certificates \
+            --region "$AWS_REGION" \
+            --query "CertificateSummaryList[?DomainName=='roast-and-co.online'].CertificateArn | [0]" \
+            --output text)"
+            
+          if [ -z "$CERTIFICATE_ARN" ] || [ "$CERTIFICATE_ARN" = "None" ]; then
+            echo "ACM certificate for roast-and-co.online was not found"
+            exit 1
+          fi
+
+          echo "Certificate ARN: $CERTIFICATE_ARN"
+          echo "certificate-arn=$CERTIFICATE_ARN" >> "$GITHUB_OUTPUT"
+
+      - name: Helm Upgrade
+        env:
+          IMAGE_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ needs.build-and-push.outputs.image-tag }}
+          CERTIFICATE_ARN: ${{ steps.acm.outputs.certificate-arn }}
+        run: |
+          helm upgrade --install roast-co ./helm \
+            --namespace dev \
+            --values ./helm/values-dev.yaml \
+            --set image.repository="$IMAGE_REPOSITORY" \
+            --set image.tag="$IMAGE_TAG" \
+            --set ingress.certificateArn="$CERTIFICATE_ARN" \
+            --wait \
+            --timeout 5m
