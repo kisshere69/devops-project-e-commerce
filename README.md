@@ -449,6 +449,22 @@ NAME                    CLASS   HOSTS                 ADDRESS   PORTS
 roast-co-dev-ingress    alb     roast-and-co.online   ...       80
 ```
 
+### Application performance
+
+Ran a k6 load test against the application:
+
+<img width="799" height="876" alt="image" src="https://github.com/user-attachments/assets/02204ae1-0e1a-4f07-8c3b-7f47527043ab" />
+
+Prometheus collected application and infrastructure metrics:
+
+<img width="1247" height="1013" alt="image" src="https://github.com/user-attachments/assets/902055e8-c7c8-4bef-ab48-221bd6d12e1a" />
+
+Grafana visualized metrics and performance:
+
+<img width="1213" height="619" alt="image" src="https://github.com/user-attachments/assets/cdf90b54-b45b-4387-893d-8e839ce57a58" />
+
+---
+
 ## Project status
 
 Work in progress
