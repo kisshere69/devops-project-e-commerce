@@ -1,4 +1,4 @@
-name: Check, Build & Push application image
+name: CI/CD Pipeline
 
 on:
   workflow_dispatch:
@@ -74,13 +74,9 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install dependencies
+      - name: Install dev dependencies
         working-directory: app
-        run: pip install -r requirements.txt
-
-      - name: Install lint/test tooling
-        run: |
-          pip install ruff bandit pip-audit
+        run: pip install -r requirements-dev.txt
 
       - name: Audit Python dependencies
         run: pip-audit
