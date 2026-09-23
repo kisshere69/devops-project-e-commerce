@@ -62,6 +62,13 @@ Roast & Co. | Cart
                                 ) }}"
                                 method="POST"
                             >
+
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                >
+
                                 <button
                                     class="quantity-button"
                                     type="submit"
@@ -83,6 +90,13 @@ Roast & Co. | Cart
                                 ) }}"
                                 method="POST"
                             >
+
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                >
+
                                 <button
                                     class="quantity-button"
                                     type="submit"
@@ -102,6 +116,13 @@ Roast & Co. | Cart
                             method="POST"
                             class="remove-item-form"
                         >
+
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token() }}"
+                            >
+
                             <button
                                 class="remove-item-button"
                                 type="submit"
@@ -145,6 +166,13 @@ Roast & Co. | Cart
                     action="{{ url_for('clear_cart_route') }}"
                     method="POST"
                 >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+                    
                     <button
                         class="empty-cart-button"
                         type="submit"
@@ -222,6 +250,13 @@ Roast & Co. | Cart
                                         ) }}"
                                         method="POST"
                                     >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
+                                        
                                         <button
                                             class="add-button"
                                             type="submit"
