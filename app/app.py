@@ -48,6 +48,7 @@ app = Flask(__name__)
 csrf=CSRFProtect(app)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
+PRODUCT_NOT_FOUND_MESSAGE = "Product not found"
 
 # Logging and request tracking
 
@@ -140,7 +141,7 @@ def product_api(product_id):
         return (
             jsonify(
                 {
-                    "error": "Product not found",
+                    "error": PRODUCT_NOT_FOUND_MESSAGE,
                 }
             ),
             404,
@@ -190,7 +191,7 @@ def add_to_cart(product_id):
     product = get_product(product_id)
 
     if product is None:
-        return "Product not found", 404
+        return PRODUCT_NOT_FOUND_MESSAGE, 404
 
     if not product["available"]:
         return "Product is unavailable", 400
@@ -319,7 +320,7 @@ def add_to_wishlist(product_id):
     product = get_product(product_id)
 
     if product is None:
-        return "Product not found", 404
+        return PRODUCT_NOT_FOUND_MESSAGE, 404
 
     wishlist_id = get_wishlist_id()
 
