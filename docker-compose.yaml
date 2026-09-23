@@ -78,7 +78,20 @@ services:
       - ./load-testing/k6/smoke.js:/scripts/smoke.js:ro
 
     entrypoint: ["k6"]
+  
+  sonarqube:
+   image: sonarqube:community
+   container_name: roast-co-sonarqube
+   ports:
+    - "9000:9000"
+   volumes:
+    - sonarqube_data:/opt/sonarqube/data
+    - sonarqube_extensions:/opt/sonarqube/extensions
+    - sonarqube_logs:/opt/sonarqube/logs
 
 volumes:
   postgres_data:
   grafana_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
