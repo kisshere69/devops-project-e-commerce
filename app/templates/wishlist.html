@@ -36,6 +36,13 @@ Roast & Co. | Wishlist
                                     action="{{ url_for('add_to_cart', product_id=item.product_id) }}"
                                     method="POST"
                                 >
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token() }}"
+                                    >
+
                                     <button
                                         type="submit"
                                         class="wishlist-add-button"
@@ -48,6 +55,13 @@ Roast & Co. | Wishlist
                                     action="{{ url_for('remove_from_wishlist', product_id=item.product_id) }}"
                                     method="POST"
                                 >
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token() }}"
+                                    >
+                                    
                                     <button
                                         type="submit"
                                         class="wishlist-remove-button"

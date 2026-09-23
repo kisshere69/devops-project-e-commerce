@@ -113,6 +113,12 @@ Roast & Co. | Coffee paradise
                                 ) }}"
                                 method="POST"
                             >
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                >
+
                                 <button
                                     class="add-button"
                                     type="submit"
@@ -125,6 +131,12 @@ Roast & Co. | Coffee paradise
                                 action="{{ url_for('add_to_wishlist', product_id=product.id) }}"
                                 method="POST"
                             >
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                >
+                                
                                 <button
                                     type="submit"
                                     class="wishlist-button"
