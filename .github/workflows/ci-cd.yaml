@@ -51,14 +51,15 @@ jobs:
       - name: Docker build validation
         run: docker build -t roast-co-app:ci .
 
-      - name: Image scan for vulnerabilities
-        run: |
-          docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            aquasec/trivy:latest \
-            image \
-            --severity HIGH,CRITICAL \
-            roast-co-app:ci
+      - name: Scan application image for HIGH and CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: roast-co-app:ci
+          format: table
+          exit-code: '1'
+          severity: "HIGH, CRITICAL"
+          vuln-type: 'os,library'
+          ignore-unfixed: true
 
   app-checks:
     name: Application Checks
