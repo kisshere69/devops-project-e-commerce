@@ -16,6 +16,7 @@ from flask import (
     session,
     url_for,
 )
+from flask_wtf.csrf import CSRFProtect
 from logging_config import configure_logging
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 from repositories.cart_repository import (
@@ -37,7 +38,6 @@ from repositories.wishlist_repository import (
 )
 
 from database import get_db_connection
-from flask_wtf.csrf import CSRFProtect
 
 configure_logging()
 
@@ -45,7 +45,7 @@ logger = logging.getLogger(__name__)
 logger.info("Application started")
 
 app = Flask(__name__)
-csrf=CSRFProtect(app)
+csrf = CSRFProtect(app)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
 PRODUCT_NOT_FOUND_MESSAGE = "Product not found"
@@ -109,7 +109,7 @@ def log_request(response):
 # Metrics
 
 
-@app.route("/metrics")
+@app.route("/metrics", methods=["GET"])
 def metrics():
     return Response(
         generate_latest(),
@@ -120,7 +120,7 @@ def metrics():
 # Home
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
     products = get_products()
 
@@ -133,7 +133,7 @@ def home():
 # Products
 
 
-@app.route("/api/products/<int:product_id>")
+@app.route("/api/products/<int:product_id>", methods=["GET"])
 def product_api(product_id):
     product = get_product(product_id)
 
@@ -153,7 +153,7 @@ def product_api(product_id):
 # Cart
 
 
-@app.route("/cart")
+@app.route("/cart", methods=["GET"])
 def cart():
     cart_id = session.get("cart_id")
 
@@ -293,7 +293,7 @@ def remove_cart_product(product_id):
 # Wishlist
 
 
-@app.route("/wishlist")
+@app.route("/wishlist", methods=["GET"])
 def wishlist():
     wishlist_id = session.get("wishlist_id")
 
@@ -353,7 +353,7 @@ def remove_from_wishlist(product_id):
 # App health checks
 
 
-@app.route("/health")
+@app.route("/health", methods=["GET"])
 def health():
     return jsonify(
         {
@@ -362,7 +362,7 @@ def health():
     )
 
 
-@app.route("/health/db")
+@app.route("/health/db", methods=["GET"])
 def database_health():
     try:
         with get_db_connection() as connection, connection.cursor() as cursor:
