@@ -21,3 +21,4 @@ crash.*.log
 *.deb
 tfplan
 *.dump
+.sonar/
