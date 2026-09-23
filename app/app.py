@@ -37,6 +37,7 @@ from repositories.wishlist_repository import (
 )
 
 from database import get_db_connection
+from flask_wtf.csrf import CSRFProtect
 
 configure_logging()
 
@@ -44,6 +45,7 @@ logger = logging.getLogger(__name__)
 logger.info("Application started")
 
 app = Flask(__name__)
+csrf=CSRFProtect(app)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
 
